@@ -64,7 +64,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     {
         updateTempdataController();
 
-        TempData["lastpage"] = "BookLiscategoryModel.Books = () _db.Bookst;";
+        TempData["lastpage"] = "BookList";
 
         return View();
     }

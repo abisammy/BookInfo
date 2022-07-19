@@ -6,6 +6,7 @@ using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using ValidateAntiForgeryTokenAttribute = Microsoft.AspNetCore.Mvc.ValidateAntiForgeryTokenAttribute;
 using ActionNameAttribute = Microsoft.AspNetCore.Mvc.ActionNameAttribute;
 using System.Dynamic;
+using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 
 namespace BookInfo.Controllers;
 
@@ -54,8 +55,14 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         updateTempdataController();
         TempData["lastpage"] = "CategoryList";
 
-        IEnumerable<Category> objCategoryList = _db.Categories.OrderBy(t => t.Name).ThenBy(t => t.CreatedAt);
-        return View(objCategoryList);
+        return View();
+    }
+
+    public PartialViewResult SearchCategories(string? searchText)
+    {
+        if (searchText == null) searchText = "";
+        var categories = _db.Categories.OrderBy(c => c.Name).Where(c => c.Name.ToLower().Contains(searchText));
+        return PartialView("_ListTable", categories);
     }
 
     private IActionResult GetCategory(int? id)

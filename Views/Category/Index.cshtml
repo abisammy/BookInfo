@@ -50,37 +50,8 @@
             </em><br/>
         } else {
             <h2>Books</h2>
-            <table class="table table-bordered table-striped" style="width:100%">
-            <thead>
-                <tr class="text-center">
-                    <th></th> 
-                    <th>Book Name</th> 
-                    <th>Author</th> 
-                    <th>Publiser</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{int i = 0;}
-                @foreach (var obj in books)
-                {
-                    i++;
-                    <tr>
-                        <td class="text-center" width=5%>@i</td>
-                        <td class="text-center" width="20%">
-                            <a asp-controller="Book" asp-action="Index" asp-route-id="@obj.Id">@obj.Name</a>
-                        </td>
-                        <td class="text-center" width="20%">
-                            <a asp-controller="Author" asp-action="Edit" asp-route-id="@obj.AuthorId">@obj.Author.Name</a>
-                        </td>
-                        <td class="text-center" width="20%">
-                            <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.CategoryId">@obj.Category.Name</a>
-                        </td>
-                        <td class="text-center">@obj.Description</td>
-                    </tr>
-                }
-            </tbody>
-        </table>  
+        ViewBag.Buttons = false;
+        <partial name="../Book/_CategoryBooks.cshtml" for="@books"></partial>
         }    
     }
 </div>

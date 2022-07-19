@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using ValidateAntiForgeryTokenAttribute = Microsoft.AspNetCore.Mvc.ValidateAntiForgeryTokenAttribute;
 using ActionNameAttribute = Microsoft.AspNetCore.Mvc.ActionNameAttribute;
+using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 
 namespace BookInfo.Controllers;
 
@@ -35,8 +36,14 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         updateTempdataController();
         TempData["lastpage"] = "AuthorList";
 
-        IEnumerable<Author> objAuthorList = _db.Authors.OrderBy(a => a.Name);
-        return View(objAuthorList);
+        return View();
+    }
+
+    public PartialViewResult SearchAuthors(string? searchText)
+    {
+        if (searchText == null) searchText = "";
+        var authors = _db.Authors.OrderBy(a => a.Name).Where(a => a.Name.ToLower().Contains(searchText));
+        return PartialView("_ListTable", authors);
     }
 
     private IActionResult GetAuthor(int? id)

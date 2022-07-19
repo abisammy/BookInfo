@@ -1,6 +1,3 @@
-@using BookInfo.Models;
-
-@model IEnumerable<Author>;
 @{
     ViewData["Title"] = "Authors";
     TempData.Keep("lastpage");
@@ -17,46 +14,41 @@
                 Create New Author</a>
         </div>
     </div>
-
-    @if (Model.Count() == 0)
+    <div class="form-inline float-right">
+        <label>Search</label>
+        <input type="text" class="form-control" id="textSearch" />
+    </div>
+    @for (int i = 0; i < 2; i++)
     {
-        <h2><em>There are currently no authors</em></h2>
+        <br />
     }
-    else
-    {
-        <table class="text-center align-middle table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int i = 0;
-                }
-                @foreach (var obj in Model)
-                {
-                    i++;
-                    <tr>
-                        <td width="15%">@i</td>
-                        <td width="60%">@obj.Name</td>
-                        <td>
-                            <div>
-                                <div class="btn-group text" role="group">
-                                    <a asp-controller="Author" asp-action="Edit" asp-route-id="@obj.Id"
-                                class="btn btn-primary mx-2">
-                                        <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
-                                    <a asp-controller="Author" asp-action="Delete" asp-route-id="@obj.Id"
-                                class="btn btn-danger mx-2">
-                                        <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+    <div id="listTable">
+        <h1>Loading authors...</h1>
+    </div>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $(() => {
+        getBooks();
+
+        $("#textSearch").on("keyup", () => {
+            getBooks();
+        })
+    });
+
+    function getBooks() {
+        $.ajax({
+            url: '@Url.Action("SearchAuthors", "Author")',
+            dataType: "html",
+            method: "GET",
+            data: { searchText: $("#textSearch").val() },
+            success: function (res) {
+                $("#listTable").html("").html(res);
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        })
+    }
+</script>

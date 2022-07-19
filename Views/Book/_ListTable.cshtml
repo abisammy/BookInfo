@@ -6,7 +6,14 @@
     if (books.Count() == 0)
     {
         <em>
-            <h3>There are no books</h3>
+            @if (!Convert.ToBoolean(TempData["hasItems"]))
+            {
+                <h3>There are currently no books</h3>
+            }
+            else
+            {
+                <h3>Invalid search</h3>
+            }
         </em>
     }
     else

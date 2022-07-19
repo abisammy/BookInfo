@@ -43,6 +43,9 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (searchText == null) searchText = "";
         var authors = _db.Authors.OrderBy(a => a.Name).Where(a => a.Name.ToLower().Contains(searchText));
+
+        TempData["hasItems"] = _db.Authors.Any();
+
         return PartialView("_ListTable", authors);
     }
 

@@ -62,6 +62,9 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (searchText == null) searchText = "";
         var categories = _db.Categories.OrderBy(c => c.Name).Where(c => c.Name.ToLower().Contains(searchText));
+
+        TempData["hasItems"] = _db.Categories.Any();
+
         return PartialView("_ListTable", categories);
     }
 

@@ -1,0 +1,86 @@
+@model dynamic
+@{
+    Category category = Model.Category;
+    IOrderedQueryable<Book>? books = Model.Books;
+    ViewData["Title"] = $"{category.Name}";
+    TempData.Keep("lastpage");
+    string currentpage = $"IndexCategory_{category.Id}";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h1 class="text-primary">@category.Name</h1>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="LastPage" asp-action="Return" asp-route-currentpage="@currentpage"
+                class="btn btn-secondary">Back</a>
+            <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-primary"> <i
+                    class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
+            <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger"> <i
+                    class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
+        </div>
+    </div>
+    <p><em>@category.Description</em></p>
+
+    <table style="width:100%" class="table table-bordered table-striped">
+        <tr>
+            <th class="text-primary text-end" width="15%" >ID</th>
+            <td>@category.Id</td>
+        </tr>
+        <tr>
+            <th class="text-end">Updated at</th>
+            <td>@{
+                    DateTime date = category.CreatedAt;
+                    @date.ToLongTimeString()
+                        <text>&nbsp;on&nbsp;</text>
+
+                    @date.ToLongDateString()
+                    ;
+                }</td>
+        </tr>
+    </table>
+    <br/>
+    <br/>
+    @{
+        if(books.Count() == 0)
+        {
+            <em>
+            <h3>There are currently no books in this category</h3>
+            </em><br/>
+        } else {
+            <h2>Books</h2>
+            <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr class="text-center">
+                    <th></th> 
+                    <th>Book Name</th> 
+                    <th>Author</th> 
+                    <th>Publiser</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int i = 0;}
+                @foreach (var obj in books)
+                {
+                    i++;
+                    <tr>
+                        <td class="text-center" width=5%>@i</td>
+                        <td class="text-center" width="20%">
+                            <a asp-controller="Book" asp-action="Index" asp-route-id="@obj.Id">@obj.Name</a>
+                        </td>
+                        <td class="text-center" width="20%">
+                            <a asp-controller="Author" asp-action="Edit" asp-route-id="@obj.AuthorId">@obj.Author.Name</a>
+                        </td>
+                        <td class="text-center" width="20%">
+                            <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.CategoryId">@obj.Category.Name</a>
+                        </td>
+                        <td class="text-center">@obj.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>  
+        }    
+    }
+</div>

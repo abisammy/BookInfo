@@ -76,7 +76,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         categoryModel.Categories = _db.Categories.OrderBy(t => t.Name).ThenBy(t => t.CreatedAt);
         categoryModel.Books = _db.Books.Where(b => b.Name.ToLower().Contains(searchText) || b.Author.Name.ToLower().Contains(searchText) || b.Publisher.Name.ToLower().Contains(searchText) || b.Id.ToString() == searchText || b.Category.Name.ToLower().Contains(searchText));
 
-        TempData["hasItems"] = _db.Books.Any();
+        ViewBag.hasItems = _db.Books.Any();
 
         return PartialView("_ListTable", categoryModel);
     }

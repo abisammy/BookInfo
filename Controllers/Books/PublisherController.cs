@@ -44,7 +44,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         if (searchText == null) searchText = "";
         var publishers = _db.Publishers.OrderBy(p => p.Name).Where(p => p.Name.ToLower().Contains(searchText));
 
-        TempData["hasItems"] = _db.Publishers.Any();
+        ViewBag.hasItems = _db.Publishers.Any();
 
         return PartialView("_ListTable", publishers);
     }

@@ -6,7 +6,7 @@
     if (books.Count() == 0)
     {
         <em>
-            @if (!Convert.ToBoolean(TempData["hasItems"]))
+            @if (ViewBag.hasItems == false)
             {
                 <h3>There are currently no books</h3>
             }

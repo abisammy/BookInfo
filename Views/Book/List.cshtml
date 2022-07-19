@@ -1,8 +1,5 @@
-@model dynamic
 @{
     ViewData["Title"] = "Books";
-    Microsoft.EntityFrameworkCore.DbSet<Book> books = Model.Books;
-    IOrderedQueryable<Category>? categories = Model.Categories;
     TempData.Keep("lastpage");
 }
 
@@ -16,82 +13,41 @@
                 Create New Book</a>
         </div>
     </div>
-    @{
-
-
-        if (books.Count() == 0)
-        {
-            <em>
-                <h3>There are currently no books</h3>
-            </em>
-        }
-        else
-        {
-            <div class="form-inline float-right">
-                <label>Search</label>
-                <input type=" text" class="form-control" id="textsearch" />
-            </div>
-            @for (int i = 0; i < 2; i++)
-            {
-                <br />
-            }
-            @foreach (Category obj in Model.Categories)
-            {
-                IOrderedQueryable<Book>? availableBooks = books.Where(book => book.CategoryId == obj.Id).OrderBy(book => book.Name);
-                if (availableBooks.Count() == 0)
-                {
-                    continue;
-                }
-                <a class="h2 text-secondary text-decoration-none" asp-controller="Category" asp-action="Index"
-        asp-route-id="@obj.Id">@obj.Name</a>
-                <table class="table table-bordered table-striped" style="width:100%">
-                    <thead>
-                        <tr class="text-center">
-                            <th></th>
-                            <th>Book Name</th>
-                            <th>Author</th>
-                            <th>Publisher</th>
-                            <th>Description</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int i = 0;
-                        }
-                        @foreach (Book book in availableBooks)
-                        {
-                            i++;
-                            <tr class="text-center align-middle">
-                                <td width="5%">@i</td>
-                                <td width="15%">
-                                    <a asp-controller="Book" asp-action="Index" asp-route-id="@book.Id">@book.Name</a>
-                                </td>
-                                <td width="15%">
-                                    <a asp-controller="Author" asp-action="Edit" asp-route-id="@book.AuthorId">@book.Author.Name</a>
-                                </td>
-                                <td width="15%">
-                                    <a asp-controller="Publisher" asp-action="Edit"
-                        asp-route-id="@book.PublisherId">@book.Publisher.Name</a>
-                                </td>
-                                <td width="30%">@book.Description</td>
-                                <td>
-                                    <div class=" btn-group text" role="group">
-                                        <a asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-primary mx-2">
-                                            <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
-                                        <a asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id"
-                            class="btn btn-danger mx-2">
-                                            <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <br />
-            }
-
-
-        }
+    <div class="form-inline float-right">
+        <label>Search</label>
+        <input type="text" class="form-control" id="textSearch" value="" />
+    </div>
+    @for (int i = 0; i < 2; i++)
+    {
+        <br />
     }
+    <div id="listTable">
+        <h1>Loading books...</h1>
+    </div>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $(() => {
+        getBooks();
+
+        $("#textSearch").on("keyup", () => {
+            getBooks();
+        })
+    });
+
+    function getBooks() {
+        $.ajax({
+            url: '@Url.Action("SearchBooks", "Book")',
+            dataType: "html",
+            method: "GET",
+            data: { searchText: $("#textSearch").val() },
+            success: function (res) {
+                $("#listTable").html("").html(res);
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        })
+    }
+</script>

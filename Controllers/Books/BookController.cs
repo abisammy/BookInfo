@@ -7,6 +7,7 @@ using ValidateAntiForgeryTokenAttribute = Microsoft.AspNetCore.Mvc.ValidateAntiF
 using ActionNameAttribute = Microsoft.AspNetCore.Mvc.ActionNameAttribute;
 using System.Dynamic;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 
 namespace BookInfo.Controllers;
 
@@ -63,13 +64,19 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     {
         updateTempdataController();
 
+        TempData["lastpage"] = "BookLiscategoryModel.Books = () _db.Bookst;";
+
+        return View();
+    }
+
+    public PartialViewResult SearchBooks(string? searchText)
+    {
         dynamic categoryModel = new ExpandoObject();
+        if (searchText == null) searchText = "";
         categoryModel.Categories = _db.Categories.OrderBy(t => t.Name).ThenBy(t => t.CreatedAt);
-        categoryModel.Books = _db.Books;
+        categoryModel.Books = _db.Books.Where(b => b.Name.ToLower().Contains(searchText) || b.Author.Name.ToLower().Contains(searchText) || b.Publisher.Name.ToLower().Contains(searchText) || b.Id.ToString() == searchText || b.Category.Name.ToLower().Contains(searchText));
 
-        TempData["lastpage"] = "BookList";
-
-        return View(categoryModel);
+        return PartialView("_ListTable", categoryModel);
     }
 
     private void setDropdowns()

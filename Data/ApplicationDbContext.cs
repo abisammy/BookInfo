@@ -20,4 +20,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Book> Books { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Publisher> Publishers { get; set; }
+
+    public DbSet<User> Users { get; set; }
 }

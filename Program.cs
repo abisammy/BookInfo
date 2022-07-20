@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using BookInfo.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.LoginPath = "/User/Login";
+    options.Cookie.Name = "BookInfoLogin";
+    options.ExpireTimeSpan = TimeSpan.FromDays(180);
+});
 
 var app = builder.Build();
 
@@ -24,7 +32,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCookiePolicy();
 
 app.MapControllerRoute(
     name: "default",

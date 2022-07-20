@@ -1,0 +1,41 @@
+@model User
+@{
+    ViewData["Title"] = $"Edit user {Model.Username}";
+}
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Edit User</h2>
+            <br />
+        </div>
+        <div asp-validation-summary="All"></div>
+        <div class="mb-3">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="AccountType"></label>
+            <select class="form-control" asp-for="AccountType">
+                <option>USER</option>
+                <option>ADMINISTRATOR</option>
+            </select>
+
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:150px">Edit</button>
+        <a asp-controller="User" asp-action="Manage" asp-route-message="User not created" class="btn btn-secondary"
+            style="width:150px">Back</a>
+    </div>
+</form>
+
+@section Scripts{
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+}

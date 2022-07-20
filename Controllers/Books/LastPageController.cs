@@ -144,6 +144,11 @@ public class LastPageController : Controller
                 int id = getId(lastPage);
                 return RedirectToAction("Index", "Category", new { id = id });
             }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+
+            }
         }
 
         return RedirectToAction("Index", "Home");

@@ -31,6 +31,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     // GET
+    // Return the publisher list view
     public IActionResult List()
     {
         updateTempdataController();
@@ -39,11 +40,15 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         return View();
     }
 
+    // GET
+    // Return a partial view with a table of publishers
     public PartialViewResult SearchPublishers(string? searchText)
     {
         if (searchText == null) searchText = "";
-        var publishers = _db.Publishers.OrderBy(p => p.Name).Where(p => p.Name.ToLower().Contains(searchText));
+        // Query the publisher table, where the name is similar to the text, ordered by name
+        var publishers = _db.Publishers.Where(p => p.Name.ToLower().Contains(searchText)).OrderBy(p => p.Name);
 
+        // If there are any publishers
         ViewBag.hasItems = _db.Publishers.Any();
 
         return PartialView("_ListTable", publishers);

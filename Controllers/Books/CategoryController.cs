@@ -50,6 +50,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     // GET
+    // Return the category list view
     public IActionResult List()
     {
         updateTempdataController();
@@ -58,11 +59,15 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         return View();
     }
 
+    // GET
+    // Return a partial view with a table of categories
     public PartialViewResult SearchCategories(string? searchText)
     {
         if (searchText == null) searchText = "";
+        // Query the category table, where the name is similar to the text, ordered by name
         var categories = _db.Categories.OrderBy(c => c.Name).Where(c => c.Name.ToLower().Contains(searchText));
 
+        // If there are any categories
         ViewBag.hasItems = _db.Categories.Any();
 
         return PartialView("_ListTable", categories);

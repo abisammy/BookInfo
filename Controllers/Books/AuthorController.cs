@@ -31,6 +31,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     // GET
+    // Return the author list view
     public IActionResult List()
     {
         updateTempdataController();
@@ -39,11 +40,15 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         return View();
     }
 
+    // GET
+    // Return a partial view with a table of authors
     public PartialViewResult SearchAuthors(string? searchText)
     {
         if (searchText == null) searchText = "";
-        var authors = _db.Authors.OrderBy(a => a.Name).Where(a => a.Name.ToLower().Contains(searchText));
+        // Query the author table, where the name is similar to the text, ordered by name
+        var authors = _db.Authors.Where(a => a.Name.ToLower().Contains(searchText)).OrderBy(a => a.Name);
 
+        // If there are any authors
         ViewBag.hasItems = _db.Authors.Any();
 
         return PartialView("_ListTable", authors);

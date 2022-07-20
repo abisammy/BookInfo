@@ -116,13 +116,13 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         {
             return NotFound();
         }
-        var categoryFromDb = _db.Users.Find(id);
-        if (categoryFromDb == null)
+        var userFromDb = _db.Users.Find(id);
+        if (userFromDb == null)
         {
             return NotFound();
         }
 
-        return View(categoryFromDb);
+        return View(userFromDb);
     }
 
     //GET

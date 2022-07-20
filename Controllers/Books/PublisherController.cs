@@ -64,12 +64,12 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         return View(categoryFromDb);
     }
 
-    private IActionResult SaveDatabase(string message)
+    private IActionResult SaveDatabase(string message, string currentPage = "", bool? returnToCreate = false)
     {
         _db.SaveChanges();
         updateTempdataController();
         TempData["success"] = message;
-        return tempdataController.Return();
+        return tempdataController.Return(currentPage, returnToCreate);
     }
 
     // GET
@@ -81,15 +81,12 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     //POST
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Publisher obj)
+    public IActionResult Create(Publisher obj, bool? returnToView)
     {
         if (ModelState.IsValid)
         {
-            updateTempdataController();
             _db.Publishers.Add(obj);
-            _db.SaveChanges();
-            TempData["success"] = "Publisher created succesfully";
-            return tempdataController.Return();
+            return SaveDatabase("Publisher created succesfully", "CreatePublisher", returnToView);
         }
 
         return View(obj);

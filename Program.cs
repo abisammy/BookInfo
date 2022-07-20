@@ -33,9 +33,3 @@ app.MapControllerRoute(
 
 
 app.Run();
-
-// TODO:
-// - Category Index
-// - Book Index
-// - Author & publisher index? - Depends on how easy it is!
-// - Done!

@@ -63,7 +63,6 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult List()
     {
         updateTempdataController();
-
         TempData["lastpage"] = "BookList";
 
         return View();

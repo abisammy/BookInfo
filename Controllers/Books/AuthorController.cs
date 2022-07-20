@@ -64,32 +64,31 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         return View(categoryFromDb);
     }
 
-    private IActionResult SaveDatabase(string message)
+    private IActionResult SaveDatabase(string message, string currentPage = "", bool? returnToCreate = false)
     {
         _db.SaveChanges();
         updateTempdataController();
         TempData["success"] = message;
-        return tempdataController.Return();
+        return tempdataController.Return(currentPage, returnToCreate);
     }
 
     // GET
     public IActionResult Create()
     {
+        updateTempdataController();
+        tempdataController.AddLastPage("CreateAuthor");
         return View();
     }
 
     //POST
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Author obj)
+    public IActionResult Create(Author obj, bool? returnToView)
     {
         if (ModelState.IsValid)
         {
-            updateTempdataController();
             _db.Authors.Add(obj);
-            _db.SaveChanges();
-            TempData["success"] = "Author created succesfully";
-            return tempdataController.Return();
+            return SaveDatabase("Author created succesfully", "CreateAuthor", returnToView);
         }
 
         return View(obj);

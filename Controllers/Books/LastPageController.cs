@@ -105,6 +105,10 @@ public class LastPageController : Controller
             {
                 return RedirectToAction("List", "Author");
             }
+            else if (lastPage == "CreateAuthor")
+            {
+                return RedirectToAction("Create", "Author");
+            }
             else if (lastPage == "PublisherList")
             {
                 return RedirectToAction("List", "Publisher");

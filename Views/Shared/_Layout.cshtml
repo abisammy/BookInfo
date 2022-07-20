@@ -27,8 +27,8 @@
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -48,8 +48,10 @@
                         ClaimTypes.Role).Value == "ADMINISTRATOR")
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primary" asp-area="" asp-controller="User" asp-action="Manage">Manage
-                                    Users</a>
+                                <strong>
+                                    <a class="nav-link text-primary" asp-area="" asp-controller="User"
+                                    asp-action="Manage">Manage Users</a>
+                                </strong>
                             </li>
                         }
                 </div>
@@ -63,9 +65,9 @@
                         }
                         else
                         {
-                            @* <li class="nav-item align-middle">
-                                <strong>Hedllo @User.Identity.Name</strong>
-                                </li> *@
+                            <li class="nav-item row align-items-center">
+                                <strong>Hello @User.Identity.Name</strong>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="User" asp-action="Logout">Logout</a>
                             </li>

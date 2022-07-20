@@ -90,7 +90,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Create()
     {
-        if (!User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         setDropdowns();
         updateTempdataController();
         tempdataController.AddLastPage("CreateBook");
@@ -102,7 +102,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Book obj, bool? returnToView)
     {
-        if (!User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         bool useAuthorDropdown = false;
         bool usePublisherDropdown = false;
 
@@ -179,7 +179,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Edit(int? id)
     {
-        if (!User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         setDropdowns();
         updateTempdataController();
         tempdataController.AddLastPage($"EditBook_{id}");
@@ -191,7 +191,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Book obj)
     {
-        if (!User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         if (ModelState.IsValid)
         {
             _db.Books.Update(obj);
@@ -204,7 +204,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Delete(int? id)
     {
-        if (!User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         return GetBook(id);
     }
 
@@ -213,7 +213,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
-        if (!User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         var obj = _db.Books.Find(id);
         if (obj == null)
         {

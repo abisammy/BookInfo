@@ -31,14 +31,14 @@
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $(() => {
-        getBooks();
+        getCategories();
 
         $("#textSearch").on("keyup", () => {
-            getBooks();
+            getCategories();
         })
     });
 
-    function getBooks() {
+    function getCategories() {
         $.ajax({
             url: '@Url.Action("SearchCategories", "Category")',
             dataType: "html",

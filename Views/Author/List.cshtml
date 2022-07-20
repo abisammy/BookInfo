@@ -30,14 +30,14 @@
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $(() => {
-        getBooks();
+        getAuthors();
 
         $("#textSearch").on("keyup", () => {
-            getBooks();
+            getAuthors();
         })
     });
 
-    function getBooks() {
+    function getAuthors() {
         $.ajax({
             url: '@Url.Action("SearchAuthors", "Author")',
             dataType: "html",

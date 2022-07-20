@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Text.RegularExpressions
+@{
     ViewData["Title"] = "Privacy Policy";
 }
 <div class="container p-3">
@@ -7,20 +8,27 @@
     <p><em>By reading this you (the user) agree to and will adhear to our (BookInfo) Privacy Policy</em></p>
     <p><em>By "you" we mean the user and by "we" or "our" we mean <strong>BookInfo</strong></em></p>
     @{
+        string replaceString(string input)
+        {
+            string replaceBi = Regex.Replace(input, "%bi", "BookInfo");
+            string makeBold = Regex.Replace(replaceBi, "!BookInfo", "<strong>BookInfo</strong>");
+            return makeBold;
+        }
+        
         string[,] privacy = new string[,]{
-            {"Contact Details", "<em>There are currently no contact details for <strong>BookInfo</strong></em>"},
-            {"Personal data", "<p><strong>BookInfo</strong> only collect data submitted by the user</p><p>This data is collected when people will create Books, Categories, Authors or Publishers</p><p>This data is needed, due to the core concept of the site, a place where books can be recorded and looked up after</p>"},
+            {"Contact Details", "<em>There are currently no contact details for !%bi</em>"},
+            {"Personal data", "<p>!%bi only collect data submitted by the user</p><p>This data is collected when people will create Books, Categories, Authors or Publishers</p><p>This data is needed, due to the core concept of the site, a place where books can be recorded and looked up after</p>"},
             {"Legal issues", "Any personal data is stored safely in out databases"},            
-            {"Time", "Data is kept forever, unless it is deleted by website administrators / moderators for purposes that do not need to be disclosed. The reason for this is the aim for this website, people are inteded to look back at past records of books"},            
-            {"Sharing data", "Any data kept, is not shared with third parties, however it is accesible to the general public, so <strong>BookInfo</strong> is not responsible for how data is collected by third parties"}            
+            {"Time", "Data is kept forever, unless it is deleted by website administrators for purposes that do not need to be disclosed. The reason for this is the aim for this website, people are inteded to look back at past records of books"},            
+            {"Sharing data", "Any data kept, is not shared with third parties, however it is accesible to the general public, so !%bi is not responsible for how data is collected by third parties"}            
             };
         @for(int i = 0; i < privacy.GetLength(0); i++){
             <br />
             <h2 class="text-secondary">@privacy[i, 0]</h2>
             @if(i != 1){ 
-                <p>@Html.Raw(privacy[i, 1])</p>
+                <p>@Html.Raw(replaceString(privacy[i, 1]))</p>
             } else {
-                @Html.Raw(privacy[i, 1]);
+                @Html.Raw(replaceString(privacy[i, 1]));
             }
         }
     }

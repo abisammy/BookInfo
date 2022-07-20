@@ -23,8 +23,8 @@
         </div>
         <button type="submit" asp-route-returnToView="true" class="btn btn-primary" style="width:150px">Create</button>
         <button type="submit" class="btn btn-primary" style="width:300px">Create and go back to categories</button>
-        <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="Category not created"
-            class="btn btn-secondary" style="width:150px">Back</a>
+        <a asp-controller="LastPage" asp-route-currentpage="CreateCategory" asp-action="Cancel"
+            asp-route-message="Category not created" class="btn btn-secondary" style="width:150px">Back</a>
     </div>
 </form>
 

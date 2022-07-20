@@ -82,33 +82,31 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         return View(categoryFromDb);
     }
 
-    private IActionResult SaveDatabase(string message)
+    private IActionResult SaveDatabase(string message, string currentPage = "", bool? returnToCreate = false)
     {
         _db.SaveChanges();
         updateTempdataController();
         TempData["success"] = message;
-        return tempdataController.Return();
+        return tempdataController.Return(currentPage, returnToCreate);
     }
 
 
     // GET
     public IActionResult Create()
     {
+        updateTempdataController();
+        tempdataController.AddLastPage("CreateCategpry");
         return View();
     }
 
     //POST
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Category obj)
+    public IActionResult Create(Category obj, bool? returnToView)
     {
         if (ModelState.IsValid)
         {
-            updateTempdataController();
-            _db.Categories.Add(obj);
-            _db.SaveChanges();
-            TempData["success"] = "Category created succesfully";
-            return tempdataController.Return();
+            return SaveDatabase("Category created succesfully", "CreateCategory", returnToView);
         }
 
         return View(obj);

@@ -80,6 +80,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     // GET
     public IActionResult Create()
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         updateTempdataController();
         tempdataController.AddLastPage("CreateAuthor");
         return View();
@@ -90,6 +91,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Author obj, bool? returnToView)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         if (ModelState.IsValid)
         {
             _db.Authors.Add(obj);
@@ -102,6 +104,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Edit(int? id)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         return GetAuthor(id);
     }
 
@@ -110,6 +113,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Author? obj)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         if (obj == null)
         {
             return NotFound();
@@ -127,6 +131,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Delete(int? id)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         return GetAuthor(id);
     }
 
@@ -135,6 +140,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         var obj = _db.Authors.Find(id);
         if (obj == null)
         {

@@ -88,6 +88,10 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(User obj)
     {
+        if (!User.Identity.IsAuthenticated || User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value != "ADMINISTRATOR")
+        {
+            return RedirectToAction("Index", "Home");
+        }
         if (_db.Users.Where(u => u.Username == obj.Username).Count() > 0)
         {
             ModelState.AddModelError("Username", "That username has been used before!");
@@ -104,6 +108,10 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
 
     private IActionResult GetUser(int? id)
     {
+        if (!User.Identity.IsAuthenticated || User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value != "ADMINISTRATOR")
+        {
+            return RedirectToAction("Index", "Home");
+        }
         if (id == null || id == 0)
         {
             return NotFound();
@@ -120,10 +128,6 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Edit(int? id)
     {
-        if (!User.Identity.IsAuthenticated || User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value != "ADMINISTRATOR")
-        {
-            return RedirectToAction("Index", "Home");
-        }
         return GetUser(id);
     }
 
@@ -132,6 +136,10 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(User? obj)
     {
+        if (!User.Identity.IsAuthenticated || User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value != "ADMINISTRATOR")
+        {
+            return RedirectToAction("Index", "Home");
+        }
         if (obj == null)
         {
             return NotFound();
@@ -149,10 +157,6 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Delete(int? id)
     {
-        if (!User.Identity.IsAuthenticated || User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value != "ADMINISTRATOR")
-        {
-            return RedirectToAction("Index", "Home");
-        }
         return GetUser(id);
     }
 
@@ -161,6 +165,10 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
+        if (!User.Identity.IsAuthenticated || User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value != "ADMINISTRATOR")
+        {
+            return RedirectToAction("Index", "Home");
+        }
         var obj = _db.Users.Find(id);
         if (obj == null)
         {

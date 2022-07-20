@@ -14,7 +14,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 {
     options.LoginPath = "/User/Login";
     options.Cookie.Name = "BookInfoLogin";
-    options.ExpireTimeSpan = TimeSpan.FromDays(180);
+    options.ExpireTimeSpan = TimeSpan.FromDays(60);
 });
 
 var app = builder.Build();

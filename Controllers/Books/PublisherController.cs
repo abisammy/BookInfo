@@ -46,7 +46,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (searchText == null) searchText = "";
         // Query the publisher table, where the name is similar to the text, ordered by name
-        var publishers = _db.Publishers.Where(p => p.Name.ToLower().Contains(searchText)).OrderBy(p => p.Name);
+        var publishers = _db.Publishers.Where(p => p.Name.ToLower().Contains(searchText) || p.Id.ToString() == searchText).OrderBy(p => p.Name);
 
         // If there are any publishers
         ViewBag.hasItems = _db.Publishers.Any();

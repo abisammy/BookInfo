@@ -65,7 +65,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (searchText == null) searchText = "";
         // Query the category table, where the name is similar to the text, ordered by name
-        var categories = _db.Categories.OrderBy(c => c.Name).Where(c => c.Name.ToLower().Contains(searchText));
+        var categories = _db.Categories.OrderBy(c => c.Name).Where(c => c.Name.ToLower().Contains(searchText) || c.Id.ToString() == searchText);
 
         // If there are any categories
         ViewBag.hasItems = _db.Categories.Any();

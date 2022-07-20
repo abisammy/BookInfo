@@ -99,6 +99,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     // GET
     public IActionResult Create()
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         updateTempdataController();
         tempdataController.AddLastPage("CreateCategory");
         return View();
@@ -109,6 +110,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Category obj, bool? returnToView)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         if (ModelState.IsValid)
         {
             return SaveDatabase("Category created succesfully", "CreateCategory", returnToView);
@@ -120,6 +122,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Edit(int? id)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         return GetCategory(id);
     }
 
@@ -128,6 +131,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Category? obj)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         if (obj == null)
         {
             return NotFound();
@@ -145,6 +149,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     //GET
     public IActionResult Delete(int? id)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         return GetCategory(id);
     }
 
@@ -153,6 +158,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
+        if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         var obj = _db.Categories.Find(id);
         if (obj == null)
         {

@@ -20,13 +20,12 @@
             <input asp-for="Password" type="password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
-        <label asp-for="AccountType"></label>
-        <select class="form-control" asp-for="AccountType">
-            <option>USER</option>
-            <option>ADMINISTRATOR</option>
-        </select>
-        <div>
-
+        <div class="mb-3">
+            <label asp-for="AccountType"></label>
+            <select class="form-control" asp-for="AccountType">
+                <option>USER</option>
+                <option>ADMINISTRATOR</option>
+            </select>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
         <a asp-controller="User" asp-action="Manage" asp-route-message="User not created" class="btn btn-secondary"

@@ -18,5 +18,6 @@ public class User
     public string Password { get; set; }
 
     [Required]
+    [DisplayName("Account Type")]
     public string AccountType { get; set; } = "USER";
 }

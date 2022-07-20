@@ -95,7 +95,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult Create()
     {
         updateTempdataController();
-        tempdataController.AddLastPage("CreateCategpry");
+        tempdataController.AddLastPage("CreateCategory");
         return View();
     }
 

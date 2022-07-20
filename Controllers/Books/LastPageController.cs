@@ -101,6 +101,10 @@ public class LastPageController : Controller
             {
                 return RedirectToAction("List", "Category");
             }
+            else if (lastPage == "CreateCategory")
+            {
+                return RedirectToAction("Create", "Category");
+            }
             else if (lastPage == "AuthorList")
             {
                 return RedirectToAction("List", "Author");
@@ -112,6 +116,10 @@ public class LastPageController : Controller
             else if (lastPage == "PublisherList")
             {
                 return RedirectToAction("List", "Publisher");
+            }
+            else if (lastPage == "CreatePublisher")
+            {
+                return RedirectToAction("Create", "Publisher");
             }
             else if (lastPage == "BookList")
             {

@@ -68,8 +68,14 @@
                             <li class="nav-item row align-items-center">
                                 <strong>Hello @User.Identity.Name</strong>
                             </li>
+                            @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value == "ADMINISTRATOR")
+                            {
+                                <li class="nav-item row align-items-center">
+                                    <em>&nbsp;(admin)</em>
+                                </li>
+                            }
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="User" asp-action="Logout">Logout</a>
+                                <a class="nav-link" asp-controller="User" asp-action="Logout">&nbsp;&nbsp;Logout</a>
                             </li>
                         }
                 </div>

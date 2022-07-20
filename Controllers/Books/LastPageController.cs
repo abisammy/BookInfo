@@ -54,7 +54,7 @@ public class LastPageController : Controller
     }
 
 
-    public string? RemoveLastPage()
+    public string? RemoveLastPage(bool keepPage)
     {
         string? lastpages = TempData["lastpage"] as string;
 
@@ -67,7 +67,10 @@ public class LastPageController : Controller
         {
             string[] lastpagesArray = lastpages.Split("-");
             string value = lastpagesArray[^1];
-            TempData["lastpage"] = string.Join('-', lastpagesArray.SkipLast(1).ToArray());
+            if (!keepPage)
+            {
+                TempData["lastpage"] = string.Join('-', lastpagesArray.SkipLast(1).ToArray());
+            }
             return value;
         }
     }
@@ -79,10 +82,19 @@ public class LastPageController : Controller
         return Convert.ToInt32(lastpage.Split("_")[1]);
     }
 
-    public IActionResult Return(string currentpage = "")
+    public IActionResult Return(string currentpage = "", bool? returnToPage = false)
     {
-        string? lastPage = RemoveLastPage();
-        if (currentpage == lastPage) lastPage = RemoveLastPage();
+        bool keepPage;
+        if (returnToPage == null)
+        {
+            keepPage = false;
+        }
+        else
+        {
+            keepPage = (bool)returnToPage;
+        }
+        string? lastPage = RemoveLastPage(keepPage);
+        if (currentpage == lastPage) lastPage = RemoveLastPage(keepPage);
         if (lastPage != null)
         {
             if (lastPage == "CategoryList")

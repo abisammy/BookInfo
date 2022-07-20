@@ -51,12 +51,12 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         return GetBook(id);
     }
 
-    private IActionResult SaveDatabase(string message, string? currentpage = "")
+    private IActionResult SaveDatabase(string message, string? currentpage = "", bool? returnToCreate = false)
     {
         _db.SaveChanges();
         updateTempdataController();
         TempData["success"] = message;
-        return tempdataController.Return(currentpage);
+        return tempdataController.Return(currentpage, returnToCreate);
     }
 
     //GET
@@ -100,7 +100,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     //POST
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Book obj)
+    public IActionResult Create(Book obj, bool? returnToView)
     {
         bool useAuthorDropdown = false;
         bool usePublisherDropdown = false;
@@ -122,8 +122,6 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
 
         ModelState.Remove("AuthorId");
         ModelState.Remove("PublisherId");
-
-        Console.WriteLine(useAuthorDropdown);
 
         setDropdowns();
         if (obj.Author.Name == null && !useAuthorDropdown)
@@ -172,7 +170,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Books.Add(obj);
-            return SaveDatabase("Book created successfully", "CreateBook");
+            return SaveDatabase("Book created successfully", "CreateBook", returnToView);
         }
         return View(obj);
     }

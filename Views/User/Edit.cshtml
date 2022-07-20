@@ -9,7 +9,6 @@
             <h2 class="text-primary">Edit User</h2>
             <br />
         </div>
-        <div asp-validation-summary="All"></div>
         <div class="mb-3">
             <label asp-for="Username"></label>
             <input asp-for="Username" class="form-control" />
@@ -17,7 +16,8 @@
         </div>
         <div class="mb-3">
             <label asp-for="Password"></label>
-            <input asp-for="Password" type="password" class="form-control" value="@Model.Password" />
+            <input asp-for="Password" type="password" onmouseleave="changeToPassword(this)"
+                onmouseenter="changeToText(this)" class="form-control" value="@Model.Password" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div class="mb-3">
@@ -29,7 +29,7 @@
 
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Edit</button>
-        <a asp-controller="User" asp-action="Manage" asp-route-message="User not deleted" class="btn btn-secondary"
+        <a asp-controller="User" asp-action="Manage" asp-route-message="User not edited" class="btn btn-secondary"
             style="width:150px">Back</a>
     </div>
 </form>
@@ -39,3 +39,12 @@
     <partial name="_ValidationScriptsPartial" />
 }
 }
+
+<script>
+    function changeToText(element) {
+        element.type = "text"
+    }
+    function changeToPassword(element) {
+        element.type = "password"
+    }
+</script>

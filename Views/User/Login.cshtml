@@ -1,6 +1,11 @@
 @model User
 @{
     ViewData["Title"] = "Login";
+    string password = "";
+    if (Model != null)
+    {
+        password = Model.Password;
+    }
 }
 
 <form method="post">
@@ -16,7 +21,7 @@
         </div>
         <div class="mb-3">
             <label asp-for="Password"></label>
-            <input asp-for="Password" type="password" class="form-control" />
+            <input asp-for="Password" type="password" value="@password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 

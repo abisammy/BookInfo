@@ -1,6 +1,11 @@
 @model User
 @{
     ViewData["Title"] = "Create user";
+    string password = "";
+    if (Model != null)
+    {
+        password = Model.Password;
+    }
 }
 
 <form method="post">
@@ -9,7 +14,6 @@
             <h2 class="text-primary">Create User</h2>
             <br />
         </div>
-        <div asp-validation-summary="All"></div>
         <div class="mb-3">
             <label asp-for="Username"></label>
             <input asp-for="Username" class="form-control" />
@@ -17,7 +21,8 @@
         </div>
         <div class="mb-3">
             <label asp-for="Password"></label>
-            <input asp-for="Password" type="password" class="form-control" />
+            <input asp-for="Password" type="password" onmouseleave="changeToPassword(this)"
+                onmouseenter="changeToText(this)" value="@password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div class="mb-3">
@@ -38,3 +43,12 @@
     <partial name="_ValidationScriptsPartial" />
 }
 }
+
+<script>
+    function changeToText(element) {
+        element.type = "text"
+    }
+    function changeToPassword(element) {
+        element.type = "password"
+    }
+</script>

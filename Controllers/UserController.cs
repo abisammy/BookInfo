@@ -73,6 +73,27 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         return View(_db.Users);
     }
 
+    private string validatePassword(string password)
+    {
+        if (password.Length < 10)
+            return "The password length must be greater than 10 characters";
+
+        bool hasUpper = password.Any(char.IsUpper);
+        bool hasLower = password.Any(char.IsLower);
+        bool hasDigit = password.Any(char.IsDigit);
+        bool hasSpecialChar = password.Any(ch => !Char.IsLetterOrDigit(ch));
+
+        if (!hasUpper)
+            return "The password must contain an upper case character";
+        if (!hasLower)
+            return "The password must contain a lower case character";
+
+        if (!hasDigit && !hasSpecialChar)
+            return "The password must contain at least one digit or special character";
+
+        return "VALID";
+    }
+
     // GET
     public IActionResult Create()
     {
@@ -95,6 +116,12 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         if (_db.Users.Where(u => u.Username == obj.Username).Count() > 0)
         {
             ModelState.AddModelError("Username", "That username has been used before!");
+            return View(obj);
+        }
+        string passwordValid = validatePassword(obj.Password);
+        if (passwordValid != "VALID")
+        {
+            ModelState.AddModelError("Password", passwordValid);
             return View(obj);
         }
         if (ModelState.IsValid)
@@ -144,7 +171,21 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         {
             return NotFound();
         }
-
+        bool usernameValid = true;
+        if (_db.Users.Where(u => u.Username == obj.Username && u.Id != obj.Id).Count() > 0)
+        {
+            ModelState.AddModelError("Username", "That username has been used before!");
+            usernameValid = false;
+        }
+        string passwordValid = validatePassword(obj.Password);
+        if (passwordValid != "VALID")
+        {
+            ModelState.AddModelError("Password", passwordValid);
+        }
+        if (!usernameValid || passwordValid != "VALID")
+        {
+            return View(obj);
+        }
         if (ModelState.IsValid)
         {
             _db.Users.Update(obj);

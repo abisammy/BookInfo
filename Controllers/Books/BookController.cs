@@ -102,50 +102,78 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Book obj)
     {
-        // TODO: Fix requiring Author name
-        // TODO: Fix validation
-        // if (obj.AuthorId == 0 && obj.Author.Name != null)
-        // {
-        //     string authorName = obj.Author.Name;
-        //     Author? author = _db.Authors.SingleOrDefault(a => a.Name == authorName);
-        //     if (author == null)
-        //     {
-        //         author = new Author()
-        //         {
-        //             Name = authorName
-        //         };
-        //         _db.Authors.Add(author);
-        //         _db.SaveChanges();
-        //     }
-        //     obj.Author = author;
-        //     obj.AuthorId = author.Id;
-        //     ModelState.ClearValidationState("AuthorId");
-        // }
-        // if (obj.PublisherId == 0 && obj.Publisher.Name != null)
-        // {
-        //     string publisherName = obj.Publisher.Name;
-        //     Publisher? publisher = _db.Publishers.SingleOrDefault(p => p.Name == publisherName);
-        //     if (publisher == null)
-        //     {
-        //         publisher = new Publisher()
-        //         {
-        //             Name = publisherName
-        //         };
-        //         _db.Publishers.Add(publisher);
-        //         _db.SaveChanges();
+        bool useAuthorDropdown = false;
+        bool usePublisherDropdown = false;
 
-        //     }
-        //     obj.Publisher = publisher;
-        //     obj.PublisherId = publisher.Id;
-        //     ModelState.ClearValidationState("PublisherId");
-        // }
+        if (obj.AuthorId != 0)
+        {
+            useAuthorDropdown = true;
+            ModelState.Remove("Author.Name");
+            obj.Author = _db.Authors.Where(a => a.Id == obj.AuthorId).First();
+        }
+
+        if (obj.PublisherId != 0)
+        {
+            usePublisherDropdown = true;
+            ModelState.Remove("Publisher.Name");
+            obj.Publisher = _db.Publishers.Where(a => a.Id == obj.PublisherId).First();
+
+        }
+
+        ModelState.Remove("AuthorId");
+        ModelState.Remove("PublisherId");
+
+        Console.WriteLine(useAuthorDropdown);
+
+        setDropdowns();
+        if (obj.Author.Name == null && !useAuthorDropdown)
+        {
+            return View(obj);
+        }
+        else if (!useAuthorDropdown)
+        {
+            string authorName = obj.Author.Name;
+            Author? author = _db.Authors.SingleOrDefault(a => a.Name == authorName);
+            if (author == null)
+            {
+                author = new Author()
+                {
+                    Name = authorName
+                };
+                _db.Authors.Add(author);
+                _db.SaveChanges();
+            }
+            obj.Author = author;
+            obj.AuthorId = author.Id;
+        }
+
+        if (obj.Publisher.Name == null && !usePublisherDropdown)
+        {
+            return View(obj);
+        }
+        else if (!usePublisherDropdown)
+        {
+            string publisherName = obj.Publisher.Name;
+            Publisher? publisher = _db.Publishers.SingleOrDefault(p => p.Name == publisherName);
+            if (publisher == null)
+            {
+                publisher = new Publisher()
+                {
+                    Name = publisherName
+                };
+                _db.Publishers.Add(publisher);
+                _db.SaveChanges();
+
+            }
+            obj.Publisher = publisher;
+            obj.PublisherId = publisher.Id;
+        }
 
         if (ModelState.IsValid)
         {
             _db.Books.Add(obj);
             return SaveDatabase("Book created successfully", "CreateBook");
         }
-        setDropdowns();
         return View(obj);
     }
 

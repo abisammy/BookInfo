@@ -35,11 +35,9 @@
             &nbsp;|&nbsp;
             <em><a asp-controller="Author" asp-action="Create">Create new author</a></em>
             @Html.DropDownListFor(m=> m.AuthorId, authorList, "Select author",htmlAttributes: new {
-            @class = "form-control", @onChange="changeDropdown(this, 'editauthor', 'Author')" })
-            @* TODO: Add box to type in author *@
-            @* data_val=false, *@
-            @* <label>or Input New Author</label> *@
-            @* <input data-val="false" class="form-control" asp-for="Author.Name"> *@
+            @class = "form-control", data_val="false", @onChange="changeDropdown(this, 'editauthor', 'Author')" })
+            <label>or Input New Author</label>
+            <input data-val="false" class="form-control" asp-for="Author.Name">
         </div>
         <div class="mb-3">
             <label>Select Publisher</label>
@@ -48,12 +46,9 @@
             &nbsp;|&nbsp;
             <em><a asp-controller="Publisher" asp-action="Create">Create new publisher</a></em>
             @Html.DropDownListFor(m=> m.PublisherId, publisherList, "Select publisher",htmlAttributes: new {
-            @class = "form-control", @onChange="changeDropdown(this, 'editpublisher', 'Publisher')" })
-            @* TODO: Add box to type in publisher *@
-            @* data_val=false, *@
-            @* <label>or Input New Publisher</label> *@
-            @* <input data-val="false" class="form-control" asp-for="Publisher.Name"> *@
-
+            @class = "form-control", data_val="false", @onChange="changeDropdown(this, 'editpublisher', 'Publisher')" })
+            <label>or Input New Publisher</label>
+            <input data-val="false" class="form-control" asp-for="Publisher.Name">
         </div>
 
         <div class="mb-3">

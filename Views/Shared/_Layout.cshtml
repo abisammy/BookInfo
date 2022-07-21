@@ -15,6 +15,10 @@
         * {
             font-size: 103%;
         }
+
+        .strongHover:hover {
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -48,10 +52,8 @@
                         ClaimTypes.Role).Value == "ADMINISTRATOR")
                         {
                             <li class="nav-item">
-                                <strong>
-                                    <a class="nav-link text-primary" asp-area="" asp-controller="User"
-                                    asp-action="Manage">Manage Users</a>
-                                </strong>
+                                <a class="strongHover nav-link text-primary" asp-area="" asp-controller="User"
+                                asp-action="Manage">Manage Users</a>
                             </li>
                         }
                 </div>

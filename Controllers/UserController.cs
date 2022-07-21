@@ -25,6 +25,15 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     // GET
     public IActionResult Login()
     {
+        if (!_db.Users.Any())
+        {
+            User admin = new User();
+            admin.Username = "ADMIN";
+            admin.Password = "ADMIN";
+            admin.AccountType = "ADMIN";
+            _db.Users.Add(admin);
+            _db.SaveChanges();
+        }
         return View();
     }
 

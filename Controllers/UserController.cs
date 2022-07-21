@@ -30,7 +30,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
             User admin = new User();
             admin.Username = "ADMIN";
             admin.Password = "ADMIN";
-            admin.AccountType = "ADMIN";
+            admin.AccountType = "ADMINISTRATOR";
             _db.Users.Add(admin);
             _db.SaveChanges();
         }

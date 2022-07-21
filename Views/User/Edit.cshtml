@@ -54,6 +54,7 @@
         element.type = "text"
     }
     function changeToPassword(element) {
-        element.type = "password"
+        if (element.value !== "Edit password")
+            element.type = "password"
     }
 </script>

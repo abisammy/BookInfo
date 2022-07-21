@@ -117,11 +117,11 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         if (!hasLower)
             return "The password must contain a lower case character";
 
-        if (!hasDigit && !hasSpecialChar)
-            return "The password must contain at least one digit or special character";
-
         if (hasSpace)
             return "The password must not contain a space or tab!";
+
+        if (!hasDigit && !hasSpecialChar)
+            return "The password must contain at least one digit or special character";
 
         return "VALID";
     }

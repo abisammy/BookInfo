@@ -26,6 +26,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     // GET
     public IActionResult Login()
     {
+        if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
         if (!_db.Users.Any())
         {
             User admin = new User();
@@ -55,6 +56,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Login(User credentials)
     {
+        if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
         var findUser = _db.Users.FirstOrDefault(u => u.Username == credentials.Username);
 
         IActionResult returnError()
@@ -156,7 +158,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         ModelState.Remove("hashKey");
-        var key = Password.GeneratePassword(32);
+        var key = Password.GeneratePassword(64);
         var password = Password.EncodePassword(obj.Password, key);
 
         obj.Password = password;

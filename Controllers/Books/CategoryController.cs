@@ -113,7 +113,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         if (ModelState.IsValid)
         {
-            return SaveDatabase("Category created succesfully", "CreateCategory", returnToView);
+            return SaveDatabase("Category created successfully", "CreateCategory", returnToView);
         }
 
         return View(obj);
@@ -140,7 +140,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Categories.Update(obj);
-            return SaveDatabase("Category edited succesfully");
+            return SaveDatabase("Category edited successfully");
         }
 
         return View(obj);
@@ -168,7 +168,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Categories.Remove(obj);
-            return SaveDatabase("Category deleted succesfully");
+            return SaveDatabase("Category deleted successfully");
         }
 
         return View(obj);

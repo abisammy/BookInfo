@@ -95,7 +95,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Authors.Add(obj);
-            return SaveDatabase("Author created succesfully", "CreateAuthor", returnToView);
+            return SaveDatabase("Author created successfully", "CreateAuthor", returnToView);
         }
 
         return View(obj);
@@ -122,7 +122,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Authors.Update(obj);
-            return SaveDatabase("Author edited succesfully");
+            return SaveDatabase("Author edited successfully");
         }
 
         return View(obj);
@@ -150,7 +150,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Authors.Remove(obj);
-            return SaveDatabase("Author deleted succesfully");
+            return SaveDatabase("Author deleted successfully");
         }
 
         return View(obj);

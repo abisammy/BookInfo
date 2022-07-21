@@ -93,7 +93,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Publishers.Add(obj);
-            return SaveDatabase("Publisher created succesfully", "CreatePublisher", returnToView);
+            return SaveDatabase("Publisher created successfully", "CreatePublisher", returnToView);
         }
 
         return View(obj);
@@ -120,7 +120,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Publishers.Update(obj);
-            return SaveDatabase("Publisher edited succesfully");
+            return SaveDatabase("Publisher edited successfully");
         }
 
         return View(obj);
@@ -148,7 +148,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Publishers.Remove(obj);
-            return SaveDatabase("Publisher deleted succesfully");
+            return SaveDatabase("Publisher deleted successfully");
         }
 
         return View(obj);

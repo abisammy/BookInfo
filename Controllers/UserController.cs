@@ -161,7 +161,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Users.Add(obj);
-            return SaveDatabase("User created succesfully");
+            return SaveDatabase("User created successfully");
         }
 
         return View(obj);
@@ -247,7 +247,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Users.Update(obj);
-            return SaveDatabase("User edited succesfully");
+            return SaveDatabase("User edited successfully");
         }
 
         return View(obj);
@@ -277,7 +277,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Users.Remove(obj);
-            return SaveDatabase("User deleted succesfully");
+            return SaveDatabase("User deleted successfully");
         }
 
         return View(obj);

@@ -1,6 +1,15 @@
 @model User
 @{
     ViewData["Title"] = $"Edit user {Model.Username}";
+    string password;
+    @if (Model.Password != "Edit password" && ViewBag.firstTime == false)
+    {
+        password = Model.Password;
+    }
+    else
+    {
+        password = "Edit password";
+    }
 }
 
 <form method="post">
@@ -16,8 +25,8 @@
         </div>
         <div class="mb-3">
             <label asp-for="Password"></label>
-            <input asp-for="Password" type="password" onmouseleave="changeToPassword(this)"
-                onmouseenter="changeToText(this)" class="form-control" value="@Model.Password" />
+            <input asp-for="Password" type="text" onmouseleave="changeToPassword(this)"
+                onmouseenter="changeToText(this)" class="form-control" value="@password" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div class="mb-3">

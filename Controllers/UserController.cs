@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using BookInfo.Helpers;
 
 namespace BookInfo.Controllers;
 
@@ -29,7 +30,12 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         {
             User admin = new User();
             admin.Username = "ADMIN";
-            admin.Password = "ADMIN";
+
+            var key = Password.GeneratePassword(32);
+            var password = Password.EncodePassword("ADMIN", key);
+            admin.Password = password;
+            admin.hashKey = key;
+
             admin.AccountType = "ADMINISTRATOR";
             _db.Users.Add(admin);
             _db.SaveChanges();
@@ -49,13 +55,24 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Login(User credentials)
     {
-        var findUser = _db.Users.FirstOrDefault(u => u.Username == credentials.Username && u.Password == credentials.Password);
+        var findUser = _db.Users.FirstOrDefault(u => u.Username == credentials.Username);
 
-        if (findUser == null)
+        IActionResult returnError()
         {
             ModelState.AddModelError("Username", "Username or password incorrect");
             ModelState.AddModelError("Password", "Username or password incorrect");
             return View(credentials);
+        }
+
+        if (findUser == null)
+        {
+            return returnError();
+        }
+
+        var tryPassword = Password.EncodePassword(credentials.Password, findUser.hashKey);
+        if (tryPassword != findUser.Password)
+        {
+            return returnError();
         }
 
         var claims = new List<Claim>{
@@ -133,6 +150,14 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
             ModelState.AddModelError("Password", passwordValid);
             return View(obj);
         }
+
+        ModelState.Remove("hashKey");
+        var key = Password.GeneratePassword(32);
+        var password = Password.EncodePassword(obj.Password, key);
+
+        obj.Password = password;
+        obj.hashKey = key;
+
         if (ModelState.IsValid)
         {
             _db.Users.Add(obj);
@@ -186,15 +211,39 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
             ModelState.AddModelError("Username", "That username has been used before!");
             usernameValid = false;
         }
-        string passwordValid = validatePassword(obj.Password);
-        if (passwordValid != "VALID")
+        string passwordValid = "VALID";
+
+        User findUser = _db.Users.FirstOrDefault(u => u.Id == obj.Id);
+
+        string password = findUser.Password;
+        if (obj.Password != null && obj.Password != "Edit password")
         {
-            ModelState.AddModelError("Password", passwordValid);
+            passwordValid = validatePassword(obj.Password);
+
+            if (passwordValid != "VALID")
+            {
+                ModelState.AddModelError("Password", passwordValid);
+            }
+            else
+            {
+                password = Password.EncodePassword(obj.Password, findUser.hashKey);
+            }
         }
+
+        _db.ChangeTracker.Clear();
+
         if (!usernameValid || passwordValid != "VALID")
         {
+            ViewBag.firstTime = false;
             return View(obj);
         }
+
+        ModelState.Remove("Password");
+        ModelState.Remove("hashKey");
+
+        obj.Password = password;
+        obj.hashKey = findUser.hashKey;
+
         if (ModelState.IsValid)
         {
             _db.Users.Update(obj);

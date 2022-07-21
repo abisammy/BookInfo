@@ -12,7 +12,10 @@ public class User
     // Name
     [Required]
     [MaxLength(128)]
-    public string Username { get; set; }
+    public string Username
+    {
+        get; set;
+    }
 
     [Required]
     public string Password { get; set; }
@@ -20,4 +23,7 @@ public class User
     [Required]
     [DisplayName("Account Type")]
     public string AccountType { get; set; } = "USER";
+
+    [Required]
+    public string hashKey { get; set; }
 }

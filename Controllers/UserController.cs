@@ -108,6 +108,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         bool hasLower = password.Any(char.IsLower);
         bool hasDigit = password.Any(char.IsDigit);
         bool hasSpecialChar = password.Any(ch => !Char.IsLetterOrDigit(ch));
+        bool hasSpace = password.Any(Char.IsWhiteSpace);
 
         if (!hasUpper)
             return "The password must contain an upper case character";
@@ -116,6 +117,9 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
 
         if (!hasDigit && !hasSpecialChar)
             return "The password must contain at least one digit or special character";
+
+        if (hasSpace)
+            return "The password must not contain a space or tab!";
 
         return "VALID";
     }

@@ -22,6 +22,11 @@
             {"Time", "Data is kept forever, unless it is deleted by website administrators for purposes that do not need to be disclosed. The reason for this is the aim for this website, people are inteded to look back at past records of books"},            
             {"Sharing data", "Any data kept, is not shared with third parties, however it is accesible to the general public, so !%bi is not responsible for how data is collected by third parties"}            
             };
+            
+        <br />
+        <h2 class="text-secondary">Cookies</h2>
+        <p>Please check out <a asp-controller="Home" asp-action="Cookie">cookie policy</a></p>
+
         @for(int i = 0; i < privacy.GetLength(0); i++){
             <br />
             <h2 class="text-secondary">@privacy[i, 0]</h2>

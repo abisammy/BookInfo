@@ -63,6 +63,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         {
             ModelState.AddModelError("Username", "Username or password incorrect");
             ModelState.AddModelError("Password", "Username or password incorrect");
+            ViewBag.firstTime = false;
             return View(credentials);
         }
 

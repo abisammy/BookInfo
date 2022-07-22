@@ -26,16 +26,23 @@
         </div>
 
         <div class="mb-3">
-            <input type="checkbox" class="form-check-input" name="check" required>&nbsp;By clicking login you agree to
-            our <a asp-controller="Home" asp-action="Cookie">cookie policy</a>
+            @if (ViewBag.firstTime != false)
+            {
+                <input type="checkbox" class="form-check-input" name="check" required>
+            }
+            else
+            {
+                <input type="checkbox" class="form-check-input" name="check" checked required>
+            }
+            &nbsp; By clicking login you agree to our <a asp-controller="Home" asp-action="Cookie"> cookie policy </a>
             <br />
-            <span class="text-danger" id="checkError" style="visibility: hidden;">Please make sure you agree to our <a class="text-danger" asp-controller="Home" asp-action="Cookie">cookie policy</a></span>
+            <span class="text-danger" id="checkError" style="visibility: hidden;">Please make sure you agree to our
+                <a class="text-danger" asp-controller="Home" asp-action="Cookie">cookie policy</a></span>
         </div>
 
         <button type="submit" class="btn btn-primary" style="width:150px">Login</button>
 
-        <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="User not created" class="btn btn-secondary"
-            style="width:150px">Back</a>
+        <a asp-controller="LastPage" asp-action="Cancel" class="btn btn-secondary" style="width:150px">Back</a>
     </div>
 </form>
 

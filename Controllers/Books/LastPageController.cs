@@ -97,7 +97,11 @@ public class LastPageController : Controller
         if (currentpage == lastPage) lastPage = RemoveLastPage(keepPage);
         if (lastPage != null)
         {
-            if (lastPage == "CategoryList")
+            if (lastPage == "Home")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else if (lastPage == "CategoryList")
             {
                 return RedirectToAction("List", "Category");
             }

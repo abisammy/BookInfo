@@ -15,6 +15,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        TempData["lastpage"] = "Home";
         return View();
     }
 

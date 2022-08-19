@@ -58,7 +58,6 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         return View(authorFromDb);
     }
 
-
     /*
         VIEWS
     */
@@ -71,7 +70,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         // Query the author table, where the name is similar to the text, ordered by name
         var authors = _db.Authors.Where(a => a.Name.ToLower().Contains(searchText) || a.Id.ToString() == searchText).OrderBy(a => a.Name);
 
-        // If there are any authors
+        // If there are any authors, to display an error in the view if no authors are found
         ViewBag.hasItems = _db.Authors.Any();
 
         return PartialView("_ListTable", authors);
@@ -125,7 +124,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     //GET
-    // Return edit author view, checking authentication, with an unknown author ID
+    // Return edit author view, checking for authentication, with an unknown author ID
     public IActionResult Edit(int? id)
     {
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
@@ -151,7 +150,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     //GET
-    // Return delete author view, checking authentication, with an unknown author ID
+    // Return delete author view, checking for authentication, with an unknown author ID
     public IActionResult Delete(int? id)
     {
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");

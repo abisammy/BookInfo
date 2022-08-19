@@ -27,7 +27,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         LOCAL METHODS
     */
 
-    // Set local instance of temp data controllers temp data to current context
+    // Set tempdata of local instance tempdataController to current context
     private void updateLastpageController()
     {
         lastpageController.TempData = TempData;

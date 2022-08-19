@@ -113,6 +113,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
         if (ModelState.IsValid)
         {
+            _db.Categories.Add(obj);
             return SaveDatabase("Category created successfully", "CreateCategory", returnToView);
         }
 

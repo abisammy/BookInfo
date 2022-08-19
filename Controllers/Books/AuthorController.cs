@@ -11,34 +11,57 @@ namespace BookInfo.Controllers;
 
 public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
 {
+    /*
+        CONSTRUCTORS
+    */
+
     private readonly ApplicationDbContext _db;
-    private LastPageController tempdataController = DependencyResolver.Current.GetService<LastPageController>();
+    private LastPageController lastpageController = DependencyResolver.Current.GetService<LastPageController>();
 
     public AuthorController(ApplicationDbContext db)
     {
         _db = db;
     }
 
-    // GET
-    public IActionResult Index()
+    /*
+        LOCAL METHODS
+    */
+
+    // Set local instance of temp data controllers temp data to current context
+    private void updateLastpageController()
     {
-        return RedirectToAction("List");
+        lastpageController.TempData = TempData;
     }
 
-    private void updateTempdataController()
+    // Save the changes to the database, send a notification (optional) and return to the last page using the lastpageController
+    private IActionResult SaveDatabase(string message, string currentPage = "", bool? returnToCreate = false)
     {
-        tempdataController.TempData = TempData;
+        _db.SaveChanges();
+        updateLastpageController();
+        TempData["success"] = message;
+        return lastpageController.Return(currentPage, returnToCreate);
     }
 
-    // GET
-    // Return the author list view
-    public IActionResult List()
+    // Find an author from the authors table by an unknown ID
+    private IActionResult GetAuthor(int? id)
     {
-        updateTempdataController();
-        TempData["lastpage"] = "AuthorList";
+        if (id == null || id == 0)
+        {
+            return NotFound();
+        }
+        var authorFromDb = _db.Authors.Find(id);
+        if (authorFromDb == null)
+        {
+            return NotFound();
+        }
 
-        return View();
+        return View(authorFromDb);
     }
+
+
+    /*
+        VIEWS
+    */
 
     // GET
     // Return a partial view with a table of authors
@@ -54,54 +77,55 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         return PartialView("_ListTable", authors);
     }
 
-    private IActionResult GetAuthor(int? id)
+    // GET
+    // Redirect to list view
+    public IActionResult Index()
     {
-        if (id == null || id == 0)
-        {
-            return NotFound();
-        }
-        var categoryFromDb = _db.Authors.Find(id);
-        if (categoryFromDb == null)
-        {
-            return NotFound();
-        }
-
-        return View(categoryFromDb);
-    }
-
-    private IActionResult SaveDatabase(string message, string currentPage = "", bool? returnToCreate = false)
-    {
-        _db.SaveChanges();
-        updateTempdataController();
-        TempData["success"] = message;
-        return tempdataController.Return(currentPage, returnToCreate);
+        return RedirectToAction("List");
     }
 
     // GET
+    // Return the author list view
+    public IActionResult List()
+    {
+        updateLastpageController();
+        TempData["lastpage"] = "AuthorList";
+
+        return View();
+    }
+
+    // GET
+    // Return create author view, checking authentication
     public IActionResult Create()
     {
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
-        updateTempdataController();
-        tempdataController.AddLastPage("CreateAuthor");
+
+        updateLastpageController();
+        lastpageController.AddLastPage("CreateAuthor");
+
         return View();
     }
 
     //POST
+    // Create author, if the form is valid, checking for authentication
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create(Author obj, bool? returnToView)
     {
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
+
         if (ModelState.IsValid)
         {
             _db.Authors.Add(obj);
             return SaveDatabase("Author created successfully", "CreateAuthor", returnToView);
         }
 
+        // If form isn't valid
         return View(obj);
     }
 
     //GET
+    // Return edit author view, checking authentication, with an unknown author ID
     public IActionResult Edit(int? id)
     {
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
@@ -109,15 +133,12 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     //POST
+    // Edit author, if the form is valid, checking for authentication
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(Author? obj)
+    public IActionResult Edit(Author obj)
     {
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
-        if (obj == null)
-        {
-            return NotFound();
-        }
 
         if (ModelState.IsValid)
         {
@@ -125,10 +146,12 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
             return SaveDatabase("Author edited successfully");
         }
 
+        // If form isn't valid
         return View(obj);
     }
 
     //GET
+    // Return delete author view, checking authentication, with an unknown author ID
     public IActionResult Delete(int? id)
     {
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
@@ -136,23 +159,20 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     //POST
+    // Delete author, if the form is valid, checking for authentication
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
         if (!User.Identity.IsAuthenticated) return RedirectToAction("List");
+
         var obj = _db.Authors.Find(id);
         if (obj == null)
         {
             return NotFound();
         }
 
-        if (ModelState.IsValid)
-        {
-            _db.Authors.Remove(obj);
-            return SaveDatabase("Author deleted successfully");
-        }
-
-        return View(obj);
+        _db.Authors.Remove(obj);
+        return SaveDatabase("Author deleted successfully");
     }
 }

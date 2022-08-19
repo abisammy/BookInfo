@@ -3,11 +3,13 @@
     TempData.Keep("lastpage");
 }
 
+@* List authors in a table *@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
             <h1 class="text-primary">Authors</h1>
         </div>
+        @* If authenticated display create button *@
         @if (User.Identity.IsAuthenticated)
         {
             <div class="col-6 text-end">
@@ -26,6 +28,7 @@
     {
         <br />
     }
+    @* Use partial view to search authors and display in table *@
     <div id="listTable">
         <h1>Loading authors...</h1>
     </div>
@@ -41,6 +44,7 @@
         })
     });
 
+    @* Call partial view with value of textbox *@
     function getAuthors() {
         $.ajax({
             url: '@Url.Action("SearchAuthors", "Author")',

@@ -2,65 +2,77 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookInfo.Controllers;
 
+/*
+
+lastpage tempdata format:
+
+page1-page2-page3_value
+
+Data is spread by hyphens
+Values are spread by underscores
+
+*/
+
 public class LastPageController : Controller
 {
-    public void AddLastPage(string page)
+    // Public method to add a last page to the last pages tempdata
+    public void AddLastPage(string pageToAdd)
     {
         string? lastpages = TempData["lastpage"] as string;
 
-        void updateTempdata()
+        // Add the page to the end of the string
+        void addLastPage()
         {
-            TempData["lastpage"] = lastpages + "-" + page;
+            TempData["lastpage"] = lastpages + "-" + pageToAdd;
         }
 
-        string[] lastpagesArray = lastpages.Split("-");
+        // If there is currently no lastpages, then just put the page to add
         if (lastpages == null)
         {
-            TempData["lastpage"] = page;
+            TempData["lastpage"] = pageToAdd;
         }
         else
         {
-            if (page.StartsWith("IndexBook"))
+            // Split it into an array 
+            string[] lastpagesArray = lastpages.Split("-");
+
+
+            if (pageToAdd.StartsWith("Index"))
             {
-                if (!lastpages.Contains("IndexBook"))
+                // Format for index pages: IndexType_IndexId, e.g IndexBook_19
+                string[] lastpageIndex = pageToAdd.Split("_");
+
+                string secondLastPage = lastpagesArray[^1];
+
+                // If the current index type isn't in there, then just add it
+                if (!lastpages.Contains(lastpageIndex[0]))
                 {
-                    updateTempdata();
+                    addLastPage();
                 }
-                else if (lastpagesArray[^2].StartsWith("IndexBook"))
+                // Else, if the second last value is an index, and is not the same type, then swap the values
+                else if (secondLastPage.StartsWith("Index")
+                && !secondLastPage.StartsWith(lastpageIndex[0]))
                 {
                     lastpagesArray[^2] = lastpagesArray[^1];
-                    lastpagesArray[^1] = page;
+                    lastpagesArray[^1] = pageToAdd;
                     TempData["lastpage"] = string.Join('-', lastpagesArray);
                 }
             }
-            else if (page.StartsWith("IndexCategory"))
+            // Else if it doesn't exist then just add it
+            else if (!lastpages.Contains(pageToAdd))
             {
-                if (!lastpages.Contains("IndexCategory"))
-                {
-                    updateTempdata();
-                }
-                else if (lastpagesArray[^1].StartsWith("IndexBook"))
-                {
-                    lastpagesArray[^2] = lastpagesArray[^1];
-                    lastpagesArray[^1] = page;
-                    TempData["lastpage"] = string.Join('-', lastpagesArray);
-                }
-            }
-            else if (!lastpages.Contains(page))
-            {
-                updateTempdata();
+                addLastPage();
             }
         }
     }
 
-
+    // Remove the last value of the lastpage temp data, by splitting it into an array and removing the value
     public string? RemoveLastPage(bool keepPage)
     {
         string? lastpages = TempData["lastpage"] as string;
 
         if (lastpages == null)
         {
-            TempData["lastpage"] = null;
             return null;
         }
         else
@@ -76,12 +88,13 @@ public class LastPageController : Controller
     }
 
 
-
-    private static int getId(string lastpage)
+    // Get the value from a lastpage value by splitting it into an array
+    private static int getValue(string lastpage)
     {
         return Convert.ToInt32(lastpage.Split("_")[1]);
     }
 
+    // Return to the last page
     public IActionResult Return(string currentpage = "", bool? returnToPage = false)
     {
         bool keepPage;
@@ -135,17 +148,17 @@ public class LastPageController : Controller
             }
             else if (lastPage.StartsWith("EditBook"))
             {
-                int id = getId(lastPage);
+                int id = getValue(lastPage);
                 return RedirectToAction("Edit", "Book", new { id = id });
             }
             else if (lastPage.StartsWith("IndexBook"))
             {
-                int id = getId(lastPage);
+                int id = getValue(lastPage);
                 return RedirectToAction("Index", "Book", new { id = id });
             }
             else if (lastPage.StartsWith("IndexCategory"))
             {
-                int id = getId(lastPage);
+                int id = getValue(lastPage);
                 return RedirectToAction("Index", "Category", new { id = id });
             }
             else

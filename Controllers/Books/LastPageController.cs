@@ -98,6 +98,9 @@ public class LastPageController : Controller
     public IActionResult Return(string currentpage = "", bool? returnToPage = false)
     {
         bool keepPage;
+
+        /* If returnToPage is true, then it won't remove the last value, so will return the current page */
+
         if (returnToPage == null)
         {
             keepPage = false;
@@ -106,8 +109,14 @@ public class LastPageController : Controller
         {
             keepPage = (bool)returnToPage;
         }
+
+        // Get the last page and remove it
         string? lastPage = RemoveLastPage(keepPage);
+
+        // If the current page is equal to the last page, then remove the last page again
         if (currentpage == lastPage) lastPage = RemoveLastPage(keepPage);
+
+        // Redirect
         if (lastPage != null)
         {
             if (lastPage == "Home")
@@ -164,13 +173,13 @@ public class LastPageController : Controller
             else
             {
                 return RedirectToAction("Index", "Home");
-
             }
         }
 
         return RedirectToAction("Index", "Home");
     }
 
+    // Send a notification and return
     public IActionResult Cancel(string? message, string? currentpage)
     {
         if (message != null) TempData["info"] = message;

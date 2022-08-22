@@ -25,9 +25,16 @@
     <p><em>@Model.Description</em></p>
 
     <table class="table table-bordered table-striped" style="width:100%">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <tr>
+                <th class="text-primary text-end" width="15%">ID</th>
+                <td>@Model.Id</td>
+            </tr>
+        }
         <tr>
-            <th class="text-primary text-end" width="15%">ID</th>
-            <td>@Model.Id</td>
+            <th class="text-primary text-end">ISBN</th>
+            <td>@Convert.ToInt64(Model.ISBN).ToString("###-##-#####-##-#")</td>
         </tr>
         <tr>
             <th class="text-end">Category</th>

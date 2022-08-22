@@ -16,6 +16,10 @@
             <input asp-for="Name" disabled class="form-control" />
         </div>
         <div class="mb-3">
+            <label asp-for="ISBN"></label>
+            <input asp-for="ISBN" disabled class="form-control" />
+        </div>
+        <div class="mb-3">
             <label asp-for="CategoryId"></label>
             <input disabled class="form-control" value="@Model.Category.Name" />
         </div>

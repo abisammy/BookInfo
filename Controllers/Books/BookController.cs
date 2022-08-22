@@ -73,7 +73,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         dynamic categoryModel = new ExpandoObject();
         if (searchText == null) searchText = "";
         categoryModel.Categories = _db.Categories.OrderBy(t => t.Name).ThenBy(t => t.CreatedAt);
-        categoryModel.Books = _db.Books.Where(b => b.Name.ToLower().Contains(searchText) || b.Author.Name.ToLower().Contains(searchText) || b.Publisher.Name.ToLower().Contains(searchText) || b.Id.ToString() == searchText || b.Category.Name.ToLower().Contains(searchText));
+        categoryModel.Books = _db.Books.Where(b => b.Name.ToLower().Contains(searchText) || b.ISBN.StartsWith(searchText.Replace("-", "")) || b.Author.Name.ToLower().Contains(searchText) || b.Publisher.Name.ToLower().Contains(searchText) || b.Id.ToString() == searchText || b.Category.Name.ToLower().Contains(searchText));
 
         ViewBag.hasItems = _db.Books.Any();
 

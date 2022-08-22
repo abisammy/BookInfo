@@ -4,11 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookInfo.Models;
 
+
 public class Book
 {
     // Primary Key
     [Key]
     public int Id { get; set; }
+
+    [Required]
+    [MinLength(13)]
+    [MaxLength(13)]
+    public string ISBN
+    { get; set; }
 
     [Required]
     [MaxLength(64)]

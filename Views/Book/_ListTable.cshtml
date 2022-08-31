@@ -21,14 +21,10 @@
 
         @foreach (Category obj in Model.Categories)
         {
-            IOrderedQueryable<Book>? availableBooks = books.Where(book => book.CategoryId == obj.Id).OrderBy(book => book.Name);
-            if (availableBooks.Count() == 0)
-            {
-                continue;
-            }
+            IOrderedQueryable<Book>? categoryBooks = books.Where(book => book.CategoryId == obj.Id).OrderBy(book => book.Name);
             <a class="h2 text-secondary text-decoration-none" asp-controller="Category" asp-action="Index"
     asp-route-id="@obj.Id">@obj.Name</a>
-            <partial name="_CategoryBooks" for="@availableBooks"></partial>
+            <partial name="_CategoryBooks" for="@categoryBooks"></partial>
         }
     }
 }

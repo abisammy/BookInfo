@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using BookInfo.Models;
 using BookInfo.Data;
-using System.Web.Mvc;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
 using ValidateAntiForgeryTokenAttribute = Microsoft.AspNetCore.Mvc.ValidateAntiForgeryTokenAttribute;
 using ActionNameAttribute = Microsoft.AspNetCore.Mvc.ActionNameAttribute;
-using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
-using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;

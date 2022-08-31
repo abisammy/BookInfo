@@ -8,7 +8,6 @@ using ActionNameAttribute = Microsoft.AspNetCore.Mvc.ActionNameAttribute;
 using System.Dynamic;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
-using System.Collections.Generic;
 
 namespace BookInfo.Controllers;
 

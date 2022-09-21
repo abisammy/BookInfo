@@ -76,11 +76,43 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         return PartialView("_ListTable", authors);
     }
 
+    // TODO: Create separate methods for get author and return author
+    // TODO: Add a FAQ, this could be editable by admins using a database and a text box and split questions and answers with regex:(Q:.+)\n(A:.+)
+
+
     // GET
     // Redirect to list view
-    public IActionResult Index()
+    public IActionResult Index(int? id)
     {
-        return RedirectToAction("List");
+        // updateLastpageController();
+        // lastpageController.AddLastPage($"IndexAuthor_{id}");
+        // return GetAuthor(id);
+        // Find the category by ID
+        if (id == null || id == 0)
+        {
+            return RedirectToAction("List");
+        }
+
+        var authorFromDb = _db.Authors.Find(id);
+        if (authorFromDb == null)
+        {
+            return NotFound();
+        }
+
+        // Create an expando model, which allows for passing multiple models to a view
+        dynamic categoryModel = new System.Dynamic.ExpandoObject();
+
+        // Create model for categories called Category
+        categoryModel.Author = authorFromDb;
+
+        // Create model for books called Books, with this category ID
+        categoryModel.Books = _db.Books.Where(book => book.AuthorId == id).OrderBy(book => book.Name).ThenBy(book => book.CreatedAt);
+
+        updateLastpageController();
+        lastpageController.AddLastPage($"IndexAuthor_{id}");
+
+        return View(categoryModel);
+        // return RedirectToAction("List");
     }
 
     // GET

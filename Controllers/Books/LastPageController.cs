@@ -170,6 +170,11 @@ public class LastPageController : Controller
                 int id = getValue(lastPage);
                 return RedirectToAction("Index", "Category", new { id = id });
             }
+            else if (lastPage.StartsWith("IndexAuthor"))
+            {
+                int id = getValue(lastPage);
+                return RedirectToAction("Index", "Author", new { id = id });
+            }
             else
             {
                 return RedirectToAction("Index", "Home");

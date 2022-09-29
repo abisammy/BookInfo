@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = $"Edit user {Model.Username}";
     string password;
-    @if (Model.Password != "Edit password" && ViewBag.firstTime == false)
+    if (Model.Password != "Edit password" && ViewBag.firstTime == false)
     {
         password = Model.Password;
     }

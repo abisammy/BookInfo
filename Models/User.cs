@@ -23,7 +23,4 @@ public class User
     [Required]
     [DisplayName("Account Type")]
     public string AccountType { get; set; } = "USER";
-
-    [Required]
-    public string hashKey { get; set; }
 }

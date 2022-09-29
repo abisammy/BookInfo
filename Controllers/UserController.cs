@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using BookInfo.Helpers;
+using System.Diagnostics;
 
 namespace BookInfo.Controllers;
 
@@ -56,7 +57,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
 
         // Has at lest one digit or special character
         bool hasDigit = password.Any(char.IsDigit);
-        bool hasSpecialChar = password.Any(char.IsLetterOrDigit);
+        bool hasSpecialChar = password.Any(ch=> !Char.IsLetterOrDigit(ch));
         if (!hasDigit && !hasSpecialChar)
             return "The password must contain at least one digit or special character";
 
@@ -103,10 +104,8 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
             User admin = new User();
             admin.Username = "ADMIN";
 
-            var key = Password.GeneratePassword(32);
-            var password = Password.EncodePassword("ADMIN", key);
+            var password = Password.GetHashString("ADMIN");
             admin.Password = password;
-            admin.hashKey = key;
 
             admin.AccountType = "ADMINISTRATOR";
             _db.Users.Add(admin);
@@ -144,7 +143,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         // Try and hash password to same stored string
-        string attemptedPassword = Password.EncodePassword(credentials.Password, findUser.hashKey);
+        string attemptedPassword = Password.GetHashString(credentials.Password);
 
         // If the hashes are not equal, then wrong password was provided, therefore incorrect
         if (attemptedPassword != findUser.Password)
@@ -222,12 +221,10 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
 
         // Remove presence validation for a hash key, and generate one
         ModelState.Remove("hashKey");
-        var key = Password.GeneratePassword(64);
 
         // Hash the password with the hash key, and set the fields
-        var password = Password.EncodePassword(obj.Password, key);
+        var password = Password.GetHashString(obj.Password);
         obj.Password = password;
-        obj.hashKey = key;
 
         // Save the user to the database
         if (ModelState.IsValid)
@@ -292,7 +289,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
             else
             {
                 // Else, set the users password using there hash key
-                password = Password.EncodePassword(obj.Password, findUser.hashKey);
+                password = Password.GetHashString(obj.Password);
             }
         }
 
@@ -311,7 +308,6 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         ModelState.Remove("hashKey");
 
         obj.Password = password;
-        obj.hashKey = findUser.hashKey;
 
         // Create the user
         if (ModelState.IsValid)

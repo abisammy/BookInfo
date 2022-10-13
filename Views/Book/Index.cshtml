@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = @Model.Name;
     TempData.Keep("lastpage");
-    string currentpage = $"IndexBook_{Model.Id}";
+    string currentpage = $"IndexBook_{Model.BookId}";
 }
 
 <div class="container p-3">
@@ -15,9 +15,9 @@
                 class="btn btn-secondary">Back</a>
             @if (User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary"> <i
+                <a asp-controller="Book" asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-primary"> <i
                     class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
-                <a asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger"> <i
+                <a asp-controller="Book" asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-danger"> <i
                     class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
             }
         </div>
@@ -29,7 +29,7 @@
         {
             <tr>
                 <th class="text-primary text-end" width="15%">ID</th>
-                <td>@Model.Id</td>
+                <td>@Model.BookId</td>
             </tr>
         }
         <tr>
@@ -43,7 +43,7 @@
         </tr>
         <tr>
             <th class="text-end">Author</th>
-            <td><a asp-controller="Author" asp-action="Edit" asp-route-id="@Model.AuthorId">@Model.Author.Name</a></td>
+            <td><a asp-controller="Author" asp-action="Index" asp-route-id="@Model.AuthorId">@Model.Author.Name</a></td>
         </tr>
         <tr>
             <th class="text-end">Publisher</th>

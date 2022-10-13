@@ -7,7 +7,7 @@ public class Author
 {
     // Primary Key
     [Key]
-    public int Id { get; set; }
+    public int AuthorId { get; set; }
 
     // Name
     [Required]

@@ -63,9 +63,9 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     // Set the dropdowns for the available options in forms, categories, authors and publishers
     private void setDropdowns()
     {
-        ViewBag.CategoryList = new SelectList(_db.Categories.OrderBy(t => t.Name).ThenBy(t => t.CreatedAt), "Id", "Name");
-        ViewBag.AuthorList = new SelectList(_db.Authors.OrderBy(t => t.Name), "Id", "Name");
-        ViewBag.PublisherList = new SelectList(_db.Publishers.OrderBy(t => t.Name), "Id", "Name");
+        ViewBag.CategoryList = new SelectList(_db.Categories.OrderBy(t => t.Name).ThenBy(t => t.CreatedAt), "CategoryId", "Name");
+        ViewBag.AuthorList = new SelectList(_db.Authors.OrderBy(t => t.Name), "AuthorId", "Name");
+        ViewBag.PublisherList = new SelectList(_db.Publishers.OrderBy(t => t.Name), "PublisherId", "Name");
     }
 
     /* 
@@ -82,7 +82,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
 
 
         // Query the books by name, isbn, author name, publisher name, book Id, category name
-        categoryModel.Books = _db.Books.Where(b => b.Name.ToLower().Contains(searchText) || b.ISBN.StartsWith(searchText.Replace("-", "")) || b.Author.Name.ToLower().Contains(searchText) || b.Publisher.Name.ToLower().Contains(searchText) || b.Id.ToString() == searchText || b.Category.Name.ToLower().Contains(searchText));
+        categoryModel.Books = _db.Books.Where(b => b.Name.ToLower().Contains(searchText) || b.ISBN.StartsWith(searchText.Replace("-", "")) || b.Author.Name.ToLower().Contains(searchText) || b.Publisher.Name.ToLower().Contains(searchText) || b.BookId.ToString() == searchText || b.Category.Name.ToLower().Contains(searchText));
 
         // Create and fill out a list of categories that have books that satisfy the query
         List<int> allowedCategories = new List<int> { };
@@ -93,7 +93,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         // Get all the categories that have a book, and order them by name
-        categoryModel.Categories = _db.Categories.Where(c => allowedCategories.Contains(c.Id)).OrderBy(t => t.Name).ThenBy(t => t.CreatedAt);
+        categoryModel.Categories = _db.Categories.Where(c => allowedCategories.Contains(c.CategoryId)).OrderBy(t => t.Name).ThenBy(t => t.CreatedAt);
 
         // If there are any books in the database, to display as an error
         ViewBag.hasItems = _db.Books.Any();
@@ -159,7 +159,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         {
             useAuthorDropdown = true;
             ModelState.Remove("Author.Name");
-            obj.Author = _db.Authors.Where(a => a.Id == obj.AuthorId).First();
+            obj.Author = _db.Authors.Where(a => a.AuthorId == obj.AuthorId).First();
         }
 
         // Same as above except for publishers (line 154)
@@ -167,7 +167,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         {
             usePublisherDropdown = true;
             ModelState.Remove("Publisher.Name");
-            obj.Publisher = _db.Publishers.Where(a => a.Id == obj.PublisherId).First();
+            obj.Publisher = _db.Publishers.Where(p => p.PublisherId == obj.PublisherId).First();
 
         }
 
@@ -207,7 +207,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
 
             // Whether author exists or not, set the author manually
             obj.Author = author;
-            obj.AuthorId = author.Id;
+            obj.AuthorId = author.AuthorId;
         }
 
         /* 
@@ -232,7 +232,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
 
             }
             obj.Publisher = publisher;
-            obj.PublisherId = publisher.Id;
+            obj.PublisherId = publisher.PublisherId;
         }
 
         // If fields other than ones to do with authors and publishers are valid, then create the book
@@ -266,7 +266,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Books.Update(obj);
-            return SaveDatabase("Book edited successfully", $"EditBook_{obj.Id}");
+            return SaveDatabase("Book edited successfully", $"EditBook_{obj.BookId}");
         }
         setDropdowns();
         return View(obj);

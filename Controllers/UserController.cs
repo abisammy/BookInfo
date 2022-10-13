@@ -263,7 +263,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
 
         // If the user name exists for another user with a different ID, then return
         bool usernameValid = true;
-        if (_db.Users.Where(u => u.Username == obj.Username && u.Id != obj.Id).Count() > 0)
+        if (_db.Users.Where(u => u.Username == obj.Username && u.UserId != obj.UserId).Count() > 0)
         {
             ModelState.AddModelError("Username", "That username has been used before!");
             usernameValid = false;
@@ -272,7 +272,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         string passwordValid = "VALID";
 
         // Find the user to use the hash key
-        User findUser = _db.Users.FirstOrDefault(u => u.Id == obj.Id);
+        User findUser = _db.Users.FirstOrDefault(u => u.UserId == obj.UserId);
 
         string password = findUser.Password;
         // If the admin inputted a password

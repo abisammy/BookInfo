@@ -7,7 +7,7 @@ public class Category
 {
     // Primary Key
     [Key]
-    public int Id { get; set; }
+    public int CategoryId { get; set; }
 
     // Name
     [Required]

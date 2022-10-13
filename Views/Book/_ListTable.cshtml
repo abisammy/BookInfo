@@ -21,9 +21,9 @@
 
         @foreach (Category obj in Model.Categories)
         {
-            IOrderedQueryable<Book>? categoryBooks = books.Where(book => book.CategoryId == obj.Id).OrderBy(book => book.Name);
+            IOrderedQueryable<Book>? categoryBooks = books.Where(book => book.CategoryId == obj.CategoryId).OrderBy(book => book.Name);
             <a class="h2 text-secondary text-decoration-none" asp-controller="Category" asp-action="Index"
-    asp-route-id="@obj.Id">@obj.Name</a>
+    asp-route-id="@obj.CategoryId">@obj.Name</a>
             <partial name="_CategoryBooks" for="@categoryBooks"></partial>
         }
     }

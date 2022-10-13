@@ -7,7 +7,7 @@ public class Publisher
 {
     // Primary Key
     [Key]
-    public int Id { get; set; }
+    public int PublisherId { get; set; }
 
     // Name
     [Required]

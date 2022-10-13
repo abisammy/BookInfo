@@ -23,10 +23,10 @@
                 <tr class="text-center align-middle">
                     <td width="5%">@i</td>
                     <td width="30%">
-                        <a asp-controller="Book" asp-action="Index" asp-route-id="@book.Id">@book.Name</a>
+                        <a asp-controller="Book" asp-action="Index" asp-route-id="@book.BookId">@book.Name</a>
                     </td>
                     <td width="20%">
-                        <a asp-controller="Author" asp-action="Edit" asp-route-id="@book.AuthorId">@book.Author.Name</a>
+                        <a asp-controller="Author" asp-action="Index" asp-route-id="@book.AuthorId">@book.Author.Name</a>
                     </td>
                     <td width="25%">
                         <a asp-controller="Publisher" asp-action="Edit"
@@ -36,9 +36,9 @@
                     {
                         <td>
                             <div class=" btn-group text" role="group">
-                                <a asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-primary mx-2">
+                                <a asp-controller="Book" asp-action="Edit" asp-route-id="@book.BookId" class="btn btn-primary mx-2">
                                     <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
-                                <a asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-danger mx-2">
+                                <a asp-controller="Book" asp-action="Delete" asp-route-id="@book.BookId" class="btn btn-danger mx-2">
                                     <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
                             </div>
                         </td>

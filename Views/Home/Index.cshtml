@@ -6,7 +6,7 @@
 
 <style>
     .homeItem:hover {
-        background-color: var(--bs-gray-800);
+        background-color: var(--bs-gray-200);
     }
 </style>
 
@@ -77,9 +77,11 @@
                 </tr>
             </table>
         </div>
+        <br />
+        <br />
+
     }
-    else
-    {
+
         <h1 class="text-primary">Welcome to BookInfo!</h1>
         <div class="mt-3 p-3">
             <h2><a asp-action="List" asp-controller="Book">Check out our Books!</a></h2>
@@ -93,6 +95,8 @@
                 Each category, with a description telling you what its about, possibly go out of your preferred genre to find something you may love!
             </p>
         </div>
+
+        @{
         string[,] homepage = new string[,]{
             {"What is !%bi?", "!%bi is a service that allows school library staff to display the available books at out library! Books are arranged in different catgegories and you can search by category, author, publisher or book title."},
             {"How much is %bi?", "!%bi is a public website, the service is available to the public and is free for everyone to use."},
@@ -106,12 +110,12 @@
             return makeBold;
         }
 
-        @for (int i = 0; i < homepage.GetLength(0); i++)
+            @for (int i = 0; i < homepage.GetLength(0); i++)
         {
-            <div class="mt-3 p-3">
-                <h2 class="text-secondary">@Html.Raw(replaceString(homepage[i, 0]))</h2>
-                <p>@Html.Raw(replaceString(homepage[i, 1]))</p>
-            </div>
+                <div class="mt-3 p-3">
+                    <h2 class="text-secondary">@Html.Raw(replaceString(homepage[i, 0]))</h2>
+                    <p>@Html.Raw(replaceString(homepage[i, 1]))</p>
+                </div>
         }
     }
 

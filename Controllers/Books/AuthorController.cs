@@ -9,6 +9,8 @@ using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 
 namespace BookInfo.Controllers;
 
+// TODO: Fix last page controller with author indexes 
+// TODO: Add publisher indexes
 public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
 {
     /*
@@ -68,7 +70,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     {
         if (searchText == null) searchText = "";
         // Query the author table, where the name is similar to the text, ordered by name
-        var authors = _db.Authors.Where(a => a.Name.ToLower().Contains(searchText) || a.Id.ToString() == searchText).OrderBy(a => a.Name);
+        var authors = _db.Authors.Where(a => a.Name.ToLower().Contains(searchText) || a.AuthorId.ToString() == searchText).OrderBy(a => a.Name);
 
         // If there are any authors, to display an error in the view if no authors are found
         ViewBag.hasItems = _db.Authors.Any();

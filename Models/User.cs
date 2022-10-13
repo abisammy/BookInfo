@@ -7,7 +7,7 @@ public class User
 {
     // Primary Key
     [Key]
-    public int Id { get; set; }
+    public int UserId { get; set; }
 
     // Name
     [Required]

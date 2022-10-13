@@ -42,7 +42,7 @@ public class LastPageController : Controller
                 // Format for index pages: IndexType_IndexId, e.g IndexBook_19
                 string[] lastpageIndex = pageToAdd.Split("_");
 
-                string secondLastPage = lastpagesArray[^1];
+                    string secondLastPage = lastpagesArray[^1];
 
                 // If the current index type isn't in there, then just add it
                 if (!lastpages.Contains(lastpageIndex[0]))

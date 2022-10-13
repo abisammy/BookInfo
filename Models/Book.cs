@@ -9,7 +9,7 @@ public class Book
 {
     // Primary Key
     [Key]
-    public int Id { get; set; }
+    public int BookId { get; set; }
 
     [Required]
     [MinLength(13)]

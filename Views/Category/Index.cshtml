@@ -4,7 +4,7 @@
     IOrderedQueryable<Book>? books = Model.Books;
     ViewData["Title"] = $"{category.Name}";
     TempData.Keep("lastpage");
-    string currentpage = $"IndexCategory_{category.Id}";
+    string currentpage = $"IndexCategory_{category.CategoryId}";
 }
 
 <div class="container p-3">
@@ -16,9 +16,9 @@
             <a asp-controller="LastPage" asp-action="Return" asp-route-currentpage="@currentpage"
                 class="btn btn-secondary">Back</a>
             @if(User.Identity.IsAuthenticated){
-            <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-primary"> <i
+            <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-primary"> <i
                     class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
-            <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger"> <i
+            <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.CategoryId" class="btn btn-danger"> <i
                     class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
             }
         </div>
@@ -28,7 +28,7 @@
     <table style="width:100%" class="table table-bordered table-striped">
         <tr>
             <th class="text-primary text-end" width="15%" >ID</th>
-            <td>@category.Id</td>
+            <td>@category.CategoryId</td>
         </tr>
         <tr>
             <th class="text-end">Updated at</th>

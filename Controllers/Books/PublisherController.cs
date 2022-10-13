@@ -12,29 +12,54 @@ namespace BookInfo.Controllers;
 public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
 {
     private readonly ApplicationDbContext _db;
-    private LastPageController tempdataController = DependencyResolver.Current.GetService<LastPageController>();
+    private LastPageController lastpageController = DependencyResolver.Current.GetService<LastPageController>();
 
     public PublisherController(ApplicationDbContext db)
     {
         _db = db;
     }
 
-    // GET
-    public IActionResult Index()
+    private void updateLastpageController()
     {
-        return RedirectToAction("List");
+        lastpageController.TempData = TempData;
     }
 
-    private void updateTempdataController()
+    // GET
+    public IActionResult Index(int? id)
     {
-        tempdataController.TempData = TempData;
+        if (id == null || id == 0)
+        {
+            return RedirectToAction("List");
+        }
+
+        var publisherFromDb = _db.Publishers.Find(id);
+        if (publisherFromDb == null)
+        {
+            return NotFound();
+        }
+
+        // Create an expando model, which allows for passing multiple models to a view
+        dynamic publisherModel = new System.Dynamic.ExpandoObject();
+
+        // Create model for categories called Category
+        publisherModel.Publisher = publisherFromDb;
+
+        // Create model for books called Books, with this category ID
+        publisherModel.Books = _db.Books.Where(book => book.PublisherId== id).OrderBy(book => book.Name).ThenBy(book => book.CreatedAt);
+
+        updateLastpageController();
+        lastpageController.AddLastPage($"IndexPublisher_{id}");
+
+        return View(publisherModel);
     }
+
+    
 
     // GET
     // Return the publisher list view
     public IActionResult List()
     {
-        updateTempdataController();
+        updateLastpageController();
         TempData["lastpage"] = "PublisherList";
 
         return View();
@@ -72,9 +97,9 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     private IActionResult SaveDatabase(string message, string currentPage = "", bool? returnToCreate = false)
     {
         _db.SaveChanges();
-        updateTempdataController();
+        updateLastpageController();
         TempData["success"] = message;
-        return tempdataController.Return(currentPage, returnToCreate);
+        return lastpageController.Return(currentPage, returnToCreate);
     }
 
     // GET

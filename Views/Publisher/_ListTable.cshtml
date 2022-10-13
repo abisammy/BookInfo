@@ -37,7 +37,7 @@ else
                 i++;
                 <tr>
                     <td width="15%">@i</td>
-                    <td width="60%">@obj.Name</td>
+                    <td width="60%"><a asp-controller="Publisher" asp-action="Index" asp-route-id="@obj.PublisherId">@obj.Name</a></td>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <td>

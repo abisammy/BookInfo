@@ -1,0 +1,47 @@
+﻿@model dynamic
+@{
+    Publisher publisher= Model.Publisher;
+    IOrderedQueryable<Book>? books = Model.Books;
+    ViewData["Title"] = $"{publisher.Name}";
+    TempData.Keep("lastpage");
+    string currentpage = $"IndexPublisher_{publisher.PublisherId}";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h1 class="text-primary">@publisher.Name</h1>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="LastPage" asp-action="Return" asp-route-currentpage="@currentpage"
+               class="btn btn-secondary">Back</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Publisher" asp-action="Edit" asp-route-id="@publisher.PublisherId" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit
+                </a>
+                <a asp-controller="Publisher" asp-action="Delete" asp-route-id="@publisher.PublisherId" class="btn btn-danger">
+                    <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete
+                </a>
+            }
+        </div>
+    </div>
+    <br />
+    <br />
+    @{
+        if (books.Count() == 0)
+        {
+            <em>
+                <h3>This publisher has no books</h3>
+            </em>
+
+            <br />
+        }
+        else
+        {
+            <h2>Books</h2>
+            ViewBag.Buttons = false;
+            <partial name="../Book/_CategoryBooks.cshtml" for="@books"></partial>
+        }
+    }
+</div>

@@ -9,8 +9,6 @@ using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 
 namespace BookInfo.Controllers;
 
-// TODO: Fix last page controller with author indexes 
-// TODO: Add publisher indexes
 public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
 {
     /*
@@ -102,18 +100,18 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         // Create an expando model, which allows for passing multiple models to a view
-        dynamic categoryModel = new System.Dynamic.ExpandoObject();
+        dynamic authorModel = new System.Dynamic.ExpandoObject();
 
         // Create model for categories called Category
-        categoryModel.Author = authorFromDb;
+        authorModel.Author = authorFromDb;
 
         // Create model for books called Books, with this category ID
-        categoryModel.Books = _db.Books.Where(book => book.AuthorId == id).OrderBy(book => book.Name).ThenBy(book => book.CreatedAt);
+        authorModel.Books = _db.Books.Where(book => book.AuthorId == id).OrderBy(book => book.Name).ThenBy(book => book.CreatedAt);
 
         updateLastpageController();
         lastpageController.AddLastPage($"IndexAuthor_{id}");
 
-        return View(categoryModel);
+        return View(authorModel);
         // return RedirectToAction("List");
     }
 

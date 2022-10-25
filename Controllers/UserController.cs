@@ -57,7 +57,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
 
         // Has at lest one digit or special character
         bool hasDigit = password.Any(char.IsDigit);
-        bool hasSpecialChar = password.Any(ch=> !Char.IsLetterOrDigit(ch));
+        bool hasSpecialChar = password.Any(ch => !Char.IsLetterOrDigit(ch));
         if (!hasDigit && !hasSpecialChar)
             return "The password must contain at least one digit or special character";
 
@@ -119,13 +119,17 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     // Attempt login to user account with provided credentials
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Login(User credentials)
+    public IActionResult Login(User credentials, string givenUsername)
     {
+        // TODO: Case sensitive usernames
         // If they are authenticated, they don't need to be re-authenticated
         if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
 
+
         // Try find the user by there username
-        var findUser = _db.Users.FirstOrDefault(u => u.Username == credentials.Username);
+        var findUser = _db.Users.FirstOrDefault(u =>
+            u.Username.ToLower() == credentials.Username.ToLower()
+        );
 
         // Create a utility to return incorrect username or password
         IActionResult returnError()
@@ -136,8 +140,8 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
             return View(credentials);
         }
 
-        // If there is no user by provided username, return
-        if (findUser == null)
+        // If there is no user by provided username, or user is an admin and username is not an exact match,     return
+        if (findUser == null || (findUser.AccountType == "ADMINISTRATOR" && findUser.Username != credentials.Username))
         {
             return returnError();
         }
@@ -205,7 +209,7 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         // If username exists return
-        if (_db.Users.Where(u => u.Username == obj.Username).Count() > 0)
+        if (_db.Users.Where(u => u.Username.ToLower() == obj.Username.ToLower()).Count() > 0)
         {
             ModelState.AddModelError("Username", "That username has been used before!");
             return View(obj);

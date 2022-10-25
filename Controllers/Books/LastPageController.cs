@@ -30,39 +30,38 @@ public class LastPageController : Controller
         if (lastpages == null)
         {
             TempData["lastpage"] = pageToAdd;
+            return;
         }
-        else
+
+        // Split it into an array 
+        string[] lastpagesArray = lastpages.Split("-");
+
+
+        if (pageToAdd.StartsWith("Index"))
         {
-            // Split it into an array 
-            string[] lastpagesArray = lastpages.Split("-");
+            // Format for index pages: IndexType_IndexId, e.g IndexBook_19
+            string[] lastpageIndex = pageToAdd.Split("_");
 
+            string secondLastPage = lastpagesArray[^1];
 
-            if (pageToAdd.StartsWith("Index"))
-            {
-                // Format for index pages: IndexType_IndexId, e.g IndexBook_19
-                string[] lastpageIndex = pageToAdd.Split("_");
-
-                    string secondLastPage = lastpagesArray[^1];
-
-                // If the current index type isn't in there, then just add it
-                if (!lastpages.Contains(lastpageIndex[0]))
-                {
-                    addLastPage();
-                }
-                // Else, if the second last value is an index, and is not the same type, then swap the values
-                else if (secondLastPage.StartsWith("Index")
-                && !secondLastPage.StartsWith(lastpageIndex[0]))
-                {
-                    lastpagesArray[^2] = lastpagesArray[^1];
-                    lastpagesArray[^1] = pageToAdd;
-                    TempData["lastpage"] = string.Join('-', lastpagesArray);
-                }
-            }
-            // Else if it doesn't exist then just add it
-            else if (!lastpages.Contains(pageToAdd))
+            // If the current index type isn't in there, then just add it
+            if (!lastpages.Contains(lastpageIndex[0]))
             {
                 addLastPage();
             }
+            // Else, if the second last value is an index, and is not the same type, then swap the values
+            else if (secondLastPage.StartsWith("Index")
+            && !secondLastPage.StartsWith(lastpageIndex[0]))
+            {
+                lastpagesArray[^2] = lastpagesArray[^1];
+                lastpagesArray[^1] = pageToAdd;
+                TempData["lastpage"] = string.Join('-', lastpagesArray);
+            }
+        }
+        // Else if it doesn't exist then just add it
+        else if (!lastpages.Contains(pageToAdd))
+        {
+            addLastPage();
         }
     }
 

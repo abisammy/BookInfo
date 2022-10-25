@@ -35,9 +35,8 @@
                 <option>USER</option>
                 <option>ADMINISTRATOR</option>
             </select>
-
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Edit</button>
+        <button type="submit" class="btn btn-primary" style="width:150px" asp-route-UserId=@Model.UserId>Edit</button>
         <a asp-controller="User" asp-action="Manage" asp-route-message="User not edited" class="btn btn-secondary"
             style="width:150px">Back</a>
     </div>

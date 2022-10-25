@@ -16,7 +16,7 @@
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Edit</button>
+        <button type="submit" class="btn btn-primary" style="width:150px" asp-route-PublisherId=@Model.PublisherId>Edit</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="Category not edited"
             class="btn btn-secondary" style="width:150px">Back</a>
 

@@ -5,7 +5,7 @@
 }
 
 @* Author editing form *@
-<form method="post">
+<form method="post" >
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Edit Author</h2>
@@ -17,7 +17,7 @@
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Edit</button>
+        <button type="submit" class="btn btn-primary" style="width:150px" asp-route-AuthorId=@Model.AuthorId>Edit</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="Author not edited" class="btn btn-secondary"
             style="width:150px">Back</a>
 

@@ -61,7 +61,7 @@
             <input value="This is a description" asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Edit</button>
+        <button type="submit" class="btn btn-primary" style="width:150px" asp-route-BookId=@Model.BookId>Edit</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="@currentPage"
             asp-route-message="Book not edited" class="btn btn-secondary" style="width:150px">Back</a>
     </div>

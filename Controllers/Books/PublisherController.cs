@@ -45,7 +45,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         publisherModel.Publisher = publisherFromDb;
 
         // Create model for books called Books, with this category ID
-        publisherModel.Books = _db.Books.Where(book => book.PublisherId== id).OrderBy(book => book.Name).ThenBy(book => book.CreatedAt);
+        publisherModel.Books = _db.Books.Where(book => book.PublisherId == id).OrderBy(book => book.Name).ThenBy(book => book.CreatedAt);
 
         updateLastpageController();
         lastpageController.AddLastPage($"IndexPublisher_{id}");
@@ -53,7 +53,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         return View(publisherModel);
     }
 
-    
+
 
     // GET
     // Return the publisher list view

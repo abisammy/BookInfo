@@ -24,7 +24,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookInfo</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
@@ -52,7 +52,7 @@
                         ClaimTypes.Role).Value == "ADMINISTRATOR")
                         {
                             <li class="nav-item">
-                                <a class="strongHover nav-link text-primary" asp-area="" asp-controller="User"
+                                <a class="strongHover nav-link text-success" asp-area="" asp-controller="User"
                                 asp-action="Manage">Manage Users</a>
                             </li>
                         }
@@ -70,7 +70,8 @@
                             <li class="nav-item nav-link row align-items-center">
                                 <div>
                                     <strong>Hello @User.Identity.Name</strong>
-                                    @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value == "ADMINISTRATOR")
+                                    @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value ==
+                                   "ADMINISTRATOR")
                                     {
                                         <em>(admin)</em>
                                     }

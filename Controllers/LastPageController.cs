@@ -94,98 +94,87 @@ public class LastPageController : Controller
     }
 
     // Return to the last page
-    public IActionResult Return(string currentpage = "", bool? returnToPage = false)
+    // TODO: Comment this better
+    // TODO: think about id system for main page
+    public IActionResult Return(string currentpage = "", bool? keepPage = false)
     {
-        bool keepPage;
+        // Get the last page and remove it
+        string? lastPage = RemoveLastPage(keepPage ?? false);
 
-        /* If returnToPage is true, then it won't remove the last value, so will return the current page */
+        // If the current page is equal to the last page, then remove the last page again
+        if (currentpage == lastPage) lastPage = RemoveLastPage(keepPage ?? false);
 
-        if (returnToPage == null)
+        // Redirect
+        if (lastPage == null)
         {
-            keepPage = false;
+            return RedirectToAction("Index", "Home");
+        }
+
+        if (lastPage == "Home")
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        else if (lastPage == "CategoryList")
+        {
+            return RedirectToAction("List", "Category");
+        }
+        else if (lastPage == "CreateCategory")
+        {
+            return RedirectToAction("Create", "Category");
+        }
+        else if (lastPage == "AuthorList")
+        {
+            return RedirectToAction("List", "Author");
+        }
+        else if (lastPage == "CreateAuthor")
+        {
+            return RedirectToAction("Create", "Author");
+        }
+        else if (lastPage == "PublisherList")
+        {
+            return RedirectToAction("List", "Publisher");
+        }
+        else if (lastPage == "CreatePublisher")
+        {
+            return RedirectToAction("Create", "Publisher");
+        }
+        else if (lastPage == "BookList")
+        {
+            return RedirectToAction("List", "Book");
+        }
+        else if (lastPage == "CreateBook")
+        {
+            return RedirectToAction("Create", "Book");
+        }
+        else if (lastPage.StartsWith("EditBook"))
+        {
+            int id = getValue(lastPage);
+            return RedirectToAction("Edit", "Book", new { id = id });
+        }
+        else if (lastPage.StartsWith("IndexBook"))
+        {
+            int id = getValue(lastPage);
+            return RedirectToAction("Index", "Book", new { id = id });
+        }
+        else if (lastPage.StartsWith("IndexCategory"))
+        {
+            int id = getValue(lastPage);
+            return RedirectToAction("Index", "Category", new { id = id });
+        }
+        else if (lastPage.StartsWith("IndexAuthor"))
+        {
+            int id = getValue(lastPage);
+            return RedirectToAction("Index", "Author", new { id = id });
+        }
+        else if (lastPage.StartsWith("IndexPublisher"))
+        {
+            int id = getValue(lastPage);
+            return RedirectToAction("Index", "Publisher", new { id = id });
         }
         else
         {
-            keepPage = (bool)returnToPage;
+            return RedirectToAction("Index", "Home");
         }
-
-        // Get the last page and remove it
-        string? lastPage = RemoveLastPage(keepPage);
-
-        // If the current page is equal to the last page, then remove the last page again
-        if (currentpage == lastPage) lastPage = RemoveLastPage(keepPage);
-
-        // Redirect
-        if (lastPage != null)
-        {
-            if (lastPage == "Home")
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else if (lastPage == "CategoryList")
-            {
-                return RedirectToAction("List", "Category");
-            }
-            else if (lastPage == "CreateCategory")
-            {
-                return RedirectToAction("Create", "Category");
-            }
-            else if (lastPage == "AuthorList")
-            {
-                return RedirectToAction("List", "Author");
-            }
-            else if (lastPage == "CreateAuthor")
-            {
-                return RedirectToAction("Create", "Author");
-            }
-            else if (lastPage == "PublisherList")
-            {
-                return RedirectToAction("List", "Publisher");
-            }
-            else if (lastPage == "CreatePublisher")
-            {
-                return RedirectToAction("Create", "Publisher");
-            }
-            else if (lastPage == "BookList")
-            {
-                return RedirectToAction("List", "Book");
-            }
-            else if (lastPage == "CreateBook")
-            {
-                return RedirectToAction("Create", "Book");
-            }
-            else if (lastPage.StartsWith("EditBook"))
-            {
-                int id = getValue(lastPage);
-                return RedirectToAction("Edit", "Book", new { id = id });
-            }
-            else if (lastPage.StartsWith("IndexBook"))
-            {
-                int id = getValue(lastPage);
-                return RedirectToAction("Index", "Book", new { id = id });
-            }
-            else if (lastPage.StartsWith("IndexCategory"))
-            {
-                int id = getValue(lastPage);
-                return RedirectToAction("Index", "Category", new { id = id });
-            }
-            else if (lastPage.StartsWith("IndexAuthor"))
-            {
-                int id = getValue(lastPage);
-                return RedirectToAction("Index", "Author", new { id = id });
-            }
-            else if (lastPage.StartsWith("IndexPublisher"))
-            {
-                int id = getValue(lastPage);
-                return RedirectToAction("Index", "Publisher", new { id = id });
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-        }
-
-        return RedirectToAction("Index", "Home");
     }
 
     // Send a notification and return

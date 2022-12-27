@@ -36,7 +36,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         var publisherFromDb = _db.Publishers.Find(id);
         if (publisherFromDb == null)
         {
-            return NotFound();
+            return RedirectToAction("List", "Publisher");
         }
 
         return View(publisherFromDb);

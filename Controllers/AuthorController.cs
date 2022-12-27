@@ -33,10 +33,10 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         {
             return NotFound();
         }
-        var authorFromDb = _db.Categories.Find(id);
+        var authorFromDb = _db.Authors.Find(id);
         if (authorFromDb == null)
         {
-            return NotFound();
+            return RedirectToAction("List", "Author");
         }
         return View(authorFromDb);
     }

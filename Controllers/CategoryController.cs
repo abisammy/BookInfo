@@ -36,7 +36,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         var categoryFromDb = _db.Categories.Find(id);
         if (categoryFromDb == null)
         {
-            return NotFound();
+            return RedirectToAction("List", "Category");
         }
         return View(categoryFromDb);
     }

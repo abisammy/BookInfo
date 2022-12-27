@@ -18,13 +18,11 @@
         </div>
         <div class="mb-3">
             <label asp-for="Description"></label>
-            <input asp-for="Description" class="form-control" />
+            <input data-val="false" asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px" asp-route-CategoryId=@Model.CategoryId>Edit</button>
-        <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="Category not edited"
-            class="btn btn-secondary" style="width:150px">Back</a>
-
+        <button type="submit" class="btn btn-primary" style="width:150px"
+            asp-route-CategoryId=@Model.CategoryId>Edit</button>
     </div>
 </form>
 

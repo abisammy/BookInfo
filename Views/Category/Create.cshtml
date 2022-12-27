@@ -18,13 +18,11 @@
         </div>
         <div class="mb-3">
             <label asp-for="Description"></label>
-            <input asp-for="Description" value="This is a description" class="form-control" />
+            <input asp-for="Description" data-val="false" value="This category has no description"
+                class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
-        <button type="submit" asp-route-returnToView="true" class="btn btn-primary" style="width:150px">Create</button>
-        <button type="submit" class="btn btn-primary" style="width:300px">Create and go back to categories</button>
-        <a asp-controller="LastPage" asp-route-currentpage="CreateCategory" asp-action="Cancel"
-            asp-route-message="Category not created" class="btn btn-secondary" style="width:150px">Back</a>
+        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
     </div>
 </form>
 

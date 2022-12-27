@@ -4,13 +4,16 @@
 
 namespace BookInfo.Migrations
 {
-    public partial class AddReadOnly : Migration
+    /// <inheritdoc />
+    public partial class AddTables : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
 

@@ -1,5 +1,4 @@
-﻿@using System.Security.Claims
-@using System.Text.RegularExpressions
+﻿@using System.Text.RegularExpressions
 @{
     ViewData["Title"] = "Home";
 }
@@ -11,98 +10,36 @@
 </style>
 
 <div class="container p-3">
-
-    @if (User.Identity.IsAuthenticated)
-    {
-        <h1 class="text-primary">Welcome @User.Identity.Name</h1>
-        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value == "ADMINISTRATOR")
-        {
-            <p><em>Logged in as admin</em></p>
-            <div class="mt-5 border p-3 homeItem">
-                <h2>Users</h2>
-                <table class="text-center align-middle table table-bordered table-striped">
-                    <tr>
-                        <td><a asp-action="Manage" asp-controller="User">Manage</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><a asp-controller="User" asp-action="Create">Create</a></td>
-                    </tr>
-                </table>
-            </div>
-        }
-        <div class="homeItem mt-5 border p-3">
-            <h2>Books</h2>
-            <table class="text-center align-middle table table-bordered table-striped">
-                <tr>
-                    <td><a asp-action="List" asp-controller="Book">List</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a asp-controller="Book" asp-action="Create">Create</a></td>
-                </tr>
-            </table>
-        </div>
-        <div class="homeItem mt-5 border p-3">
-            <h2>Categories</h2>
-            <table class="text-center align-middle table table-bordered table-striped">
-                <tr>
-                    <td><a asp-action="List" asp-controller="Category">List</a></td>
-                </tr>
-                <tr>
-                    <td><a asp-controller="Category" asp-action="Create">Create</a></td>
-                </tr>
-            </table>
-        </div>
-        <div class="homeItem mt-5 border p-3">
-            <h2>Authors</h2>
-            <table class="text-center align-middle table table-bordered table-striped">
-                <tr>
-                    <td><a asp-action="List" asp-controller="Author">List</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td><a asp-controller="Author" asp-action="Create">Create</a></td>
-                </tr>
-            </table>
-        </div>
-        <div class="homeItem mt-5 border p-3">
-            <h2>Publishers</h2>
-            <table class="text-center align-middle table table-bordered table-striped">
-                <tr>
-                    <td><a asp-action="List" asp-controller="Publisher">List</a></td>
-                </tr>
-                <tr>
-                    <td><a asp-controller="Publisher" asp-action="Create">Create</a></td>
-                </tr>
-            </table>
-        </div>
-        <br />
-        <br />
-
-    }
-
-        <h1 class="text-primary">Welcome to BookInfo!</h1>
+        <h1 class="text-primary">Welcome to BookInfo!</h1>      
+        @* TODO: Make link to book list view *@
         <div class="mt-3 p-3">
-            <h2><a asp-action="List" asp-controller="Book">Check out our Books!</a></h2>
+            <h2><p asp-action="List" asp-controller="Book">Check out our Books!</p></h2>
             <p>
-                We have categorsed books, and included authors, publishers and a description showing off the book.
+                We have categorised books, and included authors, publishers and a description showing off the book.
             </p>
         </div>
+        @* TODO: Make link to category list view *@
         <div class="mt-3 p-3">
-            <h2><a asp-action="List" asp-controller="Category">Check out our Categories!</a></h2>
+            <h2><p asp-action="List" asp-controller="Category">Check out our Categories!</p></h2>
             <p>
                 Each category, with a description telling you what its about, possibly go out of your preferred genre to find something you may love!
             </p>
         </div>
 
+        @* 
+        2D array of descriptibe paragraphs,
+        first element is title, second is paragraph.
+
+        Replace %bi with Book Info, and !%bi makes it bold
+         *@
         @{
         string[,] homepage = new string[,]{
-            {"What is %bi?", "!%bi is a service that allows school library staff to display the available books at out library! Books are arranged in different catgegories and you can search by category, author, publisher or book title."},
+            {"What is %bi?", "!%bi is a service that allows school library staff to display the available books at out library! Books are arranged in different categories and you can search by category, author, publisher or book title."},
             {"How much is %bi?", "!%bi is a public website, the service is available to the public and is free for everyone to use."},
             {"What moderation is on %bi?", "!%bi can only be edited by trusted staff, therefore there should be no explicit content on the website at all!"}
         };
 
+        @* Suroutine to replace words in descriptive paragraphs *@
         string replaceString(string input)
         {
             string replaceBi = Regex.Replace(input, "%bi", "BookInfo");
@@ -110,12 +47,16 @@
             return makeBold;
         }
 
-            @for (int i = 0; i < homepage.GetLength(0); i++)
+        @* Loop through items in array *@
+        @for (int i = 0; i < homepage.GetLength(0); i++)
         {
-                <div class="mt-3 p-3">
-                    <h2 class="text-secondary">@Html.Raw(replaceString(homepage[i, 0]))</h2>
-                    <p>@Html.Raw(replaceString(homepage[i, 1]))</p>
-                </div>
+            <div class="mt-3 p-3">
+                @* Turn title into HTML element and render it *@
+                <h2 class="text-secondary">@Html.Raw(replaceString(homepage[i, 0]))</h2>
+
+                @* Turn paragraph into html element and render it *@
+                <p>@Html.Raw(replaceString(homepage[i, 1]))</p>
+            </div>
         }
     }
 

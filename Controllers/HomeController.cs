@@ -15,16 +15,10 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        TempData["lastpage"] = "Home";
         return View();
     }
 
     public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    public IActionResult Cookie()
     {
         return View();
     }

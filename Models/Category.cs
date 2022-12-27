@@ -16,9 +16,10 @@ public class Category
 
     // Description
     [MaxLength(1024)]
-    public string Description { get; set; } = "No description";
+    public string Description { get; set; }
 
     // Updated at
+    [Required]
     [DisplayName("Updated at")]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

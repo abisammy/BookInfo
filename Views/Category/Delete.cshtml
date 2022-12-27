@@ -20,14 +20,6 @@
             <label asp-for="Description"></label>
             <input asp-for="Description" disabled class="form-control" />
         </div>
-        <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="Category not deleted"
-            class="btn btn-secondary" style="width:150px">Back</a>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
     </div>
 </form>
-
-@section Scripts{
-@{
-    <partial name="_ValidationScriptsPartial" />
-}
-}

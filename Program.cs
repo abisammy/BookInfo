@@ -3,10 +3,12 @@ using BookInfo.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
+// Add database services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.
+
+// Get connection string from appsettings.json
+UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
 

@@ -1,0 +1,61 @@
+@model dynamic
+@{
+    IQueryable<Book>? books = Model.Books;
+    IOrderedQueryable<Category>? categories = Model.Categories;
+
+    if (books.Count() == 0)
+    {
+        <em>
+            @if (ViewBag.hasItems == false)
+            {
+                <h3>There are currently no books</h3>
+            }
+            else
+            {
+                <h3>Invalid search</h3>
+            }
+        </em>
+    }
+    else
+    {
+        @foreach (Category obj in Model.Categories)
+        {
+            IOrderedQueryable<Book>? categoryBooks = books.Where(book => book.CategoryId == obj.CategoryId).OrderBy(book =>
+            book.Name);
+            <h2>@obj.Name</h2>
+            <table class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                    <tr class="text-center">
+                        <th></th>
+                        <th>Book Name</th>
+                        <th>Author</th>
+                        <th>Publisher</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int i = 0;
+                    }
+                    @foreach (Book book in categoryBooks)
+                    {
+                        i++;
+                        <tr class="text-center align-middle">
+                            <td width="5%">@i</td>
+                            <td width="30%">
+                                <p>@book.Name</p>
+                            </td>
+                            <td width="20%">
+                                <p>@book.Author.Name</p>
+                            </td>
+                            <td width="25%">
+                                <p>@book.Publisher.Name</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+
+        }
+    }
+}

@@ -12,6 +12,8 @@ public class ApplicationDbContext : DbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        optionsBuilder
+       .UseLazyLoadingProxies();
     }
 
     // Different tables go here

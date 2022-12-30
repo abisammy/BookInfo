@@ -1,0 +1,84 @@
+@model Book
+@{
+    ViewData["Title"] = "Create book";
+    TempData.Keep("lastpage");
+    SelectList categoryList = ViewBag.CategoryList;
+    SelectList authorList = ViewBag.AuthorList;
+    SelectList publisherList = ViewBag.PublisherList;
+
+}
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="pb-2 row">
+            <h2>Create Book</h2>
+            <br />
+        </div>
+        <div asp-validation-summary="All"></div>
+        <div class="mb-3">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ISBN"></label>
+            <input asp-for="ISBN" class="form-control" />
+            <span asp-validation-for="ISBN" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="CategoryId"></label>
+            &nbsp;|&nbsp;
+            <em><a id="editcategory">Edit selected category</a></em>
+            &nbsp;|&nbsp;
+            <em><a asp-controller="Category" asp-action="Create">Create new category</a></em>
+            @Html.DropDownListFor(m=> m.CategoryId, categoryList, "Select category",htmlAttributes: new { @class =
+            "form-control", @onChange="changeDropdown(this, 'editcategory', 'Category')" })
+        </div>
+        <div class="mb-3">
+            <label>Select Author</label>
+            &nbsp;|&nbsp;
+            <em><a id="editauthor">Edit selected author</a></em>
+            &nbsp;|&nbsp;
+            <em><a asp-controller="Author" asp-action="Create">Create new author</a></em>
+            @Html.DropDownListFor(m=> m.AuthorId, authorList, "Select author",htmlAttributes: new {
+            @class = "form-control", data_val="false", @onChange="changeDropdown(this, 'editauthor', 'Author')" })
+            <label>or Input New Author</label>
+            <input data-val="false" class="form-control" asp-for="Author.Name">
+        </div>
+        <div class="mb-3">
+            <label>Select Publisher</label>
+            &nbsp;|&nbsp;
+            <em><a id="editpublisher">Edit selected publisher</a></em>
+            &nbsp;|&nbsp;
+            <em><a asp-controller="Publisher" asp-action="Create">Create new publisher</a></em>
+            @Html.DropDownListFor(m=> m.PublisherId, publisherList, "Select publisher",htmlAttributes: new {
+            @class = "form-control", data_val="false", @onChange="changeDropdown(this, 'editpublisher', 'Publisher')" })
+            <label>or Input New Publisher</label>
+            <input data-val="false" class="form-control" asp-for="Publisher.Name">
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description"></label>
+            <input value="This is a description" asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:300px">Create </button>
+    </div>
+
+
+</form>
+
+@section Scripts{
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+<script>
+    function changeDropdown(list, element, controller) {
+        const setvalue = list.value;
+        if (setvalue.length !== 0) {
+            $(`#${element}`).attr("href", "/" + controller + "/Edit/" + setvalue)
+        } else {
+            $(`#${element}`).removeAttr("href")
+        }
+    }
+</script>
+}

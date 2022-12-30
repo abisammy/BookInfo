@@ -3,6 +3,8 @@ using BookInfo.Models;
 using BookInfo.Data;
 using System.Dynamic;
 using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
+using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+
 
 namespace BookInfo.Controllers;
 
@@ -17,6 +19,15 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     public BookController(ApplicationDbContext db)
     {
         _db = db;
+    }
+
+    /* Functions */
+    // Set the dropdowns for the available options in forms, categories, authors and publishers
+    private void setDropdowns()
+    {
+        ViewBag.CategoryList = new SelectList(_db.Categories.OrderBy(t => t.Name).ThenBy(t => t.CreatedAt), "CategoryId", "Name");
+        ViewBag.AuthorList = new SelectList(_db.Authors.OrderBy(t => t.Name), "AuthorId", "Name");
+        ViewBag.PublisherList = new SelectList(_db.Publishers.OrderBy(t => t.Name), "PublisherId", "Name");
     }
 
     /* 
@@ -60,5 +71,122 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         TempData["lastpage"] = "BookList";
 
         return View();
+    }
+
+
+    //GET
+    // Return the create view, setting the available options for dropdowns
+    public IActionResult Create()
+    {
+        setDropdowns();
+        return View();
+    }
+
+    //POST
+    // Create book, optionally creating an author and publisher
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(Book obj)
+    {
+        // Whether the user used the dropdowns
+        bool useAuthorDropdown = false;
+        bool usePublisherDropdown = false;
+
+        /* 
+            If the user did use the author dropdown, meaning the Id is set,
+            set the variable to true,
+            remove validation for authors,
+            and find the author manually
+         */
+        if (obj.AuthorId != 0)
+        {
+            useAuthorDropdown = true;
+            ModelState.Remove("Author.Name");
+            obj.Author = _db.Authors.Where(a => a.AuthorId == obj.AuthorId).First();
+        }
+
+        // Same as above except for publishers (line 154)
+        if (obj.PublisherId != 0)
+        {
+            usePublisherDropdown = true;
+            ModelState.Remove("Publisher.Name");
+            obj.Publisher = _db.Publishers.Where(p => p.PublisherId == obj.PublisherId).First();
+
+        }
+
+        // Manually remove validation for author Id
+        ModelState.Remove("AuthorId");
+        ModelState.Remove("PublisherId");
+
+        // Set the dropdowns for selection, incase the creator is rejected
+        setDropdowns();
+
+        /*         
+            If they didn't fill out an author name, as well as didn't use the dropdown
+            then they didn't provide an author, so redirect
+        */
+        if (obj.Author.Name == null && !useAuthorDropdown)
+        {
+            return View(obj);
+        }
+        // Else if they didn't use the dropdown
+        else if (!useAuthorDropdown)
+        {
+            string authorName = obj.Author.Name;
+
+            // Find if the author exists in the database
+            Author? author = _db.Authors.SingleOrDefault(a => a.Name == authorName);
+
+            // If author doesn't exist then create one
+            if (author == null)
+            {
+                author = new Author()
+                {
+                    Name = authorName
+                };
+                _db.Authors.Add(author);
+                _db.SaveChanges();
+            }
+
+            // Whether author exists or not, set the author manually
+            obj.Author = author;
+            obj.AuthorId = author.AuthorId;
+        }
+
+        /* 
+            Same as previous if, else if statement, except for publishers (line 123)
+        */
+        if (obj.Publisher.Name == null && !usePublisherDropdown)
+        {
+            return View(obj);
+        }
+        else if (!usePublisherDropdown)
+        {
+            string publisherName = obj.Publisher.Name;
+            Publisher? publisher = _db.Publishers.SingleOrDefault(p => p.Name == publisherName);
+            if (publisher == null)
+            {
+                publisher = new Publisher()
+                {
+                    Name = publisherName
+                };
+                _db.Publishers.Add(publisher);
+                _db.SaveChanges();
+
+            }
+            obj.Publisher = publisher;
+            obj.PublisherId = publisher.PublisherId;
+        }
+
+        // If fields other than ones to do with authors and publishers are valid, then create the book
+        if (ModelState.IsValid)
+        {
+            _db.Books.Add(obj);
+            _db.SaveChanges();
+            TempData["success"] = "Book created successfully";
+            return RedirectToAction("List", "Book");
+        }
+
+        return View(obj);
     }
 }

@@ -30,6 +30,31 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         ViewBag.PublisherList = new SelectList(_db.Publishers.OrderBy(t => t.Name), "PublisherId", "Name");
     }
 
+    // Find a book from the books table by an unknown ID
+    private IActionResult GetBook(int? id)
+    {
+        if (id == null || id == 0)
+        {
+            return NotFound();
+        }
+        var bookFromDb = _db.Books.Find(id);
+        if (bookFromDb == null)
+        {
+            return RedirectToAction("List", "Book");
+        }
+
+        return View(bookFromDb);
+    }
+
+
+    // Save the changes to the database, send a notification 
+    private IActionResult SaveDatabase(string message)
+    {
+        _db.SaveChanges();
+        TempData["success"] = message;
+        return RedirectToAction("List", "Book");
+    }
+
     /* 
         VIEWS
     */
@@ -185,6 +210,56 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
             _db.SaveChanges();
             TempData["success"] = "Book created successfully";
             return RedirectToAction("List", "Book");
+        }
+
+        return View(obj);
+    }
+
+    //GET
+    // Return the edit view,setting dropdowns for options, with an unknown book Id
+    public IActionResult Edit(int? id)
+    {
+        setDropdowns();
+        return GetBook(id);
+    }
+
+    //POST
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    // Edit book, if form is valid
+    public IActionResult Edit(Book obj)
+    {
+        if (ModelState.IsValid)
+        {
+            _db.Books.Update(obj);
+            return SaveDatabase("Book edited successfully");
+        }
+        setDropdowns();
+        return View(obj);
+    }
+
+    //GET
+    // Return delete view, checking for authentication, with an unknown book Id
+    public IActionResult Delete(int? id)
+    {
+        return GetBook(id);
+    }
+
+    //POST
+    // Delete book, with an unknown Id, checking for authentication
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public IActionResult DeletePOST(int? id)
+    {
+        var obj = _db.Books.Find(id);
+        if (obj == null)
+        {
+            return NotFound();
+        }
+        if (ModelState.IsValid)
+        {
+            _db.Books.Remove(obj);
+            return SaveDatabase("Book deleted successfully");
         }
 
         return View(obj);

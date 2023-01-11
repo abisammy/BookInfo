@@ -113,6 +113,12 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Book obj)
     {
+        if (obj.Description == null)
+        {
+            obj.Description = "This book has no description";
+            ModelState.Remove("Description");
+        }
+        
         // Whether the user used the dropdowns
         bool useAuthorDropdown = false;
         bool usePublisherDropdown = false;

@@ -118,7 +118,6 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
             obj.Description = "This book has no description";
             ModelState.Remove("Description");
         }
-        
         // Whether the user used the dropdowns
         bool useAuthorDropdown = false;
         bool usePublisherDropdown = false;
@@ -131,8 +130,8 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
          */
         if (obj.AuthorId != 0)
         {
-            useAuthorDropdown = true;
             ModelState.Remove("Author.Name");
+            useAuthorDropdown = true;
             obj.Author = _db.Authors.Where(a => a.AuthorId == obj.AuthorId).First();
         }
 
@@ -235,8 +234,9 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     // Edit book, if form is valid
     public IActionResult Edit(Book? obj)
     {
-        if(obj== null) {
-            return NotFound()
+        if (obj == null)
+        {
+            return NotFound();
         }
         if (obj.Description == null)
         {

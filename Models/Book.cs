@@ -32,10 +32,6 @@ public class Book
     [MaxLength(1024)]
     public string Description { get; set; } = "No description";
 
-    // Updated at
-    [DisplayName("Updated at")]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-
     // Author
     [ForeignKey("Author")]
     [DisplayName("Author")]
@@ -49,4 +45,9 @@ public class Book
     public int PublisherId { get; set; }
 
     public virtual Publisher? Publisher { get; set; }
+
+    // Updated at
+    [Required]
+    [DisplayName("Updated at")]
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 }

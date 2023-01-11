@@ -14,4 +14,9 @@ public class Author
     [MaxLength(64)]
     [DisplayName("Author")]
     public string Name { get; set; }
+
+    // Updated at
+    [Required]
+    [DisplayName("Updated at")]
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 }

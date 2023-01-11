@@ -21,5 +21,5 @@ public class Category
     // Updated at
     [Required]
     [DisplayName("Updated at")]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 }

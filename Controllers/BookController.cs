@@ -25,7 +25,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     // Set the dropdowns for the available options in forms, categories, authors and publishers
     private void setDropdowns()
     {
-        ViewBag.CategoryList = new SelectList(_db.Categories.OrderBy(t => t.Name).ThenBy(t => t.CreatedAt), "CategoryId", "Name");
+        ViewBag.CategoryList = new SelectList(_db.Categories.OrderBy(t => t.Name).ThenBy(t => t.UpdatedAt), "CategoryId", "Name");
         ViewBag.AuthorList = new SelectList(_db.Authors.OrderBy(t => t.Name), "AuthorId", "Name");
         ViewBag.PublisherList = new SelectList(_db.Publishers.OrderBy(t => t.Name), "PublisherId", "Name");
     }
@@ -80,7 +80,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         // Get all the categories that have a book, and order them by name
-        categoryModel.Categories = _db.Categories.Where(c => allowedCategories.Contains(c.CategoryId)).OrderBy(t => t.Name).ThenBy(t => t.CreatedAt);
+        categoryModel.Categories = _db.Categories.Where(c => allowedCategories.Contains(c.CategoryId)).OrderBy(t => t.Name).ThenBy(t => t.UpdatedAt);
 
         // If there are any books in the database, to display as an error
         ViewBag.hasItems = _db.Books.Any();

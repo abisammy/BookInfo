@@ -14,4 +14,8 @@ public class Publisher
     [MaxLength(64)]
     [DisplayName("Publisher")]
     public string Name { get; set; }
+
+    // Updated at
+    [DisplayName("Updated at")]
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 }

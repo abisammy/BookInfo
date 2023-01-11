@@ -111,6 +111,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Category? obj)
     {
+        // TODO: Check if all posts have this
         if (obj == null)
         {
             return NotFound();

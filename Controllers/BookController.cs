@@ -233,8 +233,16 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     // Edit book, if form is valid
-    public IActionResult Edit(Book obj)
+    public IActionResult Edit(Book? obj)
     {
+        if(obj== null) {
+            return NotFound()
+        }
+        if (obj.Description == null)
+        {
+            obj.Description = "This category has no description";
+            ModelState.Remove("Description");
+        }
         if (ModelState.IsValid)
         {
             _db.Books.Update(obj);

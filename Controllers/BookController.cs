@@ -30,20 +30,40 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         ViewBag.PublisherList = new SelectList(_db.Publishers.OrderBy(t => t.Name), "PublisherId", "Name");
     }
 
-    // Find a book from the books table by an unknown ID
-    private IActionResult GetBook(int? id)
+    private class ReturnBook
     {
-        if (id == null || id == 0)
+        public Boolean error { get; set; }
+        public IActionResult? action { get; set; }
+        public Book? Book { get; set; }
+    }
+
+    private ReturnBook GetBook(int? id)
+    {
+        ReturnBook returnBook = new ReturnBook();
+        ReturnBook error(IActionResult view)
         {
-            return NotFound();
-        }
-        var bookFromDb = _db.Books.Find(id);
-        if (bookFromDb == null)
-        {
-            return RedirectToAction("List", "Book");
+            returnBook.error = true;
+            returnBook.action = view;
+            return returnBook;
         }
 
-        return View(bookFromDb);
+        if (id == null || id == 0)
+            return (error(NotFound()));
+
+        var bookFromDb = _db.Books.Find(id);
+        if (bookFromDb == null) return (error(RedirectToAction("List", "Book")));
+
+        returnBook.error = false;
+        returnBook.Book = bookFromDb;
+        return returnBook;
+    }
+
+    // Find a book from the books table by an unknown ID
+    private IActionResult GetBookView(int? id)
+    {
+        var book = GetBook(id);
+        if (book.error) return book.action;
+        else return View(book.Book);
     }
 
 
@@ -225,7 +245,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult Edit(int? id)
     {
         setDropdowns();
-        return GetBook(id);
+        return GetBookView(id);
     }
 
     //POST
@@ -256,7 +276,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     // Return delete view, checking for authentication, with an unknown book Id
     public IActionResult Delete(int? id)
     {
-        return GetBook(id);
+        return GetBookView(id);
     }
 
     //POST
@@ -265,17 +285,14 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
-        var obj = _db.Books.Find(id);
-        if (obj == null)
-        {
-            return NotFound();
-        }
+        var book = GetBook(id);
+        if (book.error) return book.action;
         if (ModelState.IsValid)
         {
-            _db.Books.Remove(obj);
+            _db.Books.Remove(book.Book);
             return SaveDatabase("Book deleted successfully");
         }
 
-        return View(obj);
+        return View(book.Book);
     }
 }

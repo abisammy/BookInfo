@@ -43,7 +43,7 @@
                         <tr class="text-center align-middle">
                             <td width="5%">@i</td>
                             <td width="30%">
-                                <p>@book.Name</p>
+                                <a asp-controller="Book" asp-action="Index" asp-route-id="@book.BookId">@book.Name</a>
                             </td>
                             <td width="20%">
                                 <p>@book.Author.Name</p>

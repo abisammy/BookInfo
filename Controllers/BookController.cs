@@ -80,6 +80,13 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     */
 
     // GET
+    // Return the index view of the book
+    public IActionResult Index(int? id)
+    {
+        return GetBookView(id);
+    }
+
+    // GET
     // Return a partial view with a table of books, with a given search text that will be queried
     public PartialViewResult SearchBooks(string? searchText)
     {

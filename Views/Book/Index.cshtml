@@ -1,0 +1,49 @@
+@model Book
+@{
+    ViewData["Title"] = @Model.Name;
+    TempData.Keep("lastpage");
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h1 class="text-primary">@Model.Name</h1>
+        </div>
+    </div>
+    <p><em>@Model.Description</em></p>
+
+    <table class="table table-bordered table-striped" style="width:100%">
+        <tr>
+            <th class="text-primary text-end">ISBN</th>
+            <td>@Convert.ToInt64(Model.ISBN).ToString("###-##-#####-##-#")</td>
+        </tr>
+        <tr>
+            <th class="text-end">Category</th>
+            <td><a>@Model.Category.Name</a></td>
+        </tr>
+        <tr>
+            <th class="text-end">Author</th>
+            <td>
+                <a>@Model.Author.Name</a>
+            </td>
+        </tr>
+        <tr>
+            <th class="text-end">Publisher</th>
+            <td>
+                <a>@Model.Publisher.Name</a> </a>
+            </td>
+        </tr>
+        <tr>
+            <th class="text-end">Updated at</th>
+            <td>@{
+                    DateTime date = Model.UpdatedAt;
+                    @date.ToLongTimeString()
+                    <text>&nbsp;on&nbsp;</text>
+
+                    @date.ToLongDateString()
+                    ;
+                }
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,47 @@
+﻿@model dynamic
+@{
+    Author author = Model.Author;
+    IOrderedQueryable<Book>? books = Model.Books;
+    ViewData["Title"] = $"{author.Name}";
+    TempData.Keep("lastpage");
+    string currentpage = $"IndexAuthor_{author.AuthorId}";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h1 class="text-primary">@author.Name</h1>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped" style="width:100%">
+        <tr>
+            <th class="text-end">Updated at</th>
+            <td>@{
+                    @author.UpdatedAt.ToLongTimeString()
+                    <text>&nbsp;on&nbsp;</text>
+
+                    @author.UpdatedAt.ToLongDateString()
+                    ;
+                }
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+    @{
+        if (books.Count() == 0)
+        {
+            <em>
+                <h3>This author has no books</h3>
+            </em>
+
+            <br />
+        }
+        else
+        {
+            <h2>Books</h2>
+            ViewBag.Buttons = false;
+            <partial name="../Book/_BookTable.cshtml" for="@books"></partial>
+        }
+    }
+</div>

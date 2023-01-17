@@ -23,49 +23,8 @@
             IOrderedQueryable<Book>? categoryBooks = books.Where(book => book.CategoryId == obj.CategoryId).OrderBy(book =>
             book.Name);
             <h2>@obj.Name</h2>
-            <table class="table table-bordered table-striped" style="width:100%">
-                <thead>
-                    <tr class="text-center">
-                        <th></th>
-                        <th>Book Name</th>
-                        <th>Author</th>
-                        <th>Publisher</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        int i = 0;
-                    }
-                    @foreach (Book book in categoryBooks)
-                    {
-                        i++;
-                        <tr class="text-center align-middle">
-                            <td width="5%">@i</td>
-                            <td width="30%">
-                                <a asp-controller="Book" asp-action="Index" asp-route-id="@book.BookId">@book.Name</a>
-                            </td>
-                            <td width="20%">
-                                <p>@book.Author.Name</p>
-                            </td>
-                            <td width="25%">
-                                <p>@book.Publisher.Name</p>
-                            </td>
-                            <td>
-                                <div class="btn-group text" role="group">
-                                    <a asp-controller="Book" asp-action="Edit" asp-route-id="@book.BookId" class="btn btn-primary mx-2">
-                                        <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a> <a asp-controller="Book" asp-action="Delete"
-                        asp-route-id="@book.BookId" class="btn btn-danger mx-2">
-                                        <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
-
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <partial name="_BookTable" for="@categoryBooks"></partial>
             <br />
-
         }
     }
 }

@@ -26,25 +26,64 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         return RedirectToAction("List", "Publisher");
     }
 
-    // Find a publisher from the publishers table by an unknown ID
-    private IActionResult GetPublisher(int? id)
+    private class ReturnPublisher
     {
-        if (id == null || id == 0)
+        public Boolean error { get; set; }
+        public IActionResult? action { get; set; }
+        public Publisher? Publisher { get; set; }
+    }
+
+    private ReturnPublisher GetPublisher(int? id)
+    {
+        ReturnPublisher returnPublisher = new ReturnPublisher();
+        ReturnPublisher error(IActionResult view)
         {
-            return NotFound();
-        }
-        var publisherFromDb = _db.Publishers.Find(id);
-        if (publisherFromDb == null)
-        {
-            return RedirectToAction("List", "Publisher");
+            returnPublisher.error = true;
+            returnPublisher.action = view;
+            return returnPublisher;
         }
 
-        return View(publisherFromDb);
+        if (id == null || id == 0) return (error(NotFound()));
+
+        var publisherFromDb = _db.Publishers.Find(id);
+        if (publisherFromDb == null) return (error(RedirectToAction("List", "Publisher")));
+
+        returnPublisher.error = false;
+        returnPublisher.Publisher = publisherFromDb;
+
+        return returnPublisher;
+    }
+
+    // Find a publisher from the publishers table by an unknown ID
+    private IActionResult GetPublisherView(int? id)
+    {
+        var publisher = GetPublisher(id);
+        if (publisher.error) return publisher.action;
+        return View(publisher.Publisher);
     }
 
     /*
             VIEWS
     */
+
+    // GET
+    // Return publisher index view with books for publisher
+    public IActionResult Index(int? id)
+    {
+        var publisher = GetPublisher(id);
+        if (publisher.error) return publisher.action;
+
+        // Create expando object
+        dynamic publisherModel = new System.Dynamic.ExpandoObject();
+
+        // Set publisher to publisher associate with id
+        publisherModel.Publisher = publisher.Publisher;
+
+        // Find books by publisher ID
+        publisherModel.Books = _db.Books.Where(book => book.PublisherId == id).OrderBy(book => book.Name).ThenBy(book => book.UpdatedAt);
+
+        return View(publisherModel);
+    }
 
     // GET
     // Return a partial view with a table of publishers
@@ -101,7 +140,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     // Return edit author view, with an unknown author ID
     public IActionResult Edit(int? id)
     {
-        return GetPublisher(id);
+        return GetPublisherView(id);
     }
 
     //POST
@@ -127,7 +166,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     // Return delete publisher view, with an unknown publisher ID
     public IActionResult Delete(int? id)
     {
-        return GetPublisher(id);
+        return GetPublisherView(id);
     }
 
     //POST
@@ -136,13 +175,10 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
-        var obj = _db.Publishers.Find(id);
-        if (obj == null)
-        {
-            return NotFound();
-        }
+        var publisher = GetPublisher(id);
+        if (publisher.error) return publisher.action;
 
-        _db.Publishers.Remove(obj);
+        _db.Publishers.Remove(publisher.Publisher);
         return SaveDatabase("Publisher deleted successfully");
     }
 }

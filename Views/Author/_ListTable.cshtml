@@ -37,7 +37,7 @@ else
                 <tr>
                     <td width="15%">@i</td>
                     <td width="60%">
-                        <p>@obj.Name</p>
+                        <a asp-controller="Author" asp-action="Index" asp-route-id="@obj.AuthorId">@obj.Name</a>
                     </td>
                     <td>
                         <div class="btn-group text" role="group">

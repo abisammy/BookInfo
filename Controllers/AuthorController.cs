@@ -26,24 +26,65 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         return RedirectToAction("List", "Author");
     }
 
-    // Find an category from the categories table by an unknown ID
-    private IActionResult GetAuthor(int? id)
+
+    private class ReturnAuthor
     {
-        if (id == null || id == 0)
+        public Boolean error { get; set; }
+        public IActionResult? action { get; set; }
+        public Author? Author { get; set; }
+    }
+
+    private ReturnAuthor GetAuthor(int? id)
+    {
+        ReturnAuthor returnAuthor = new ReturnAuthor();
+        ReturnAuthor error(IActionResult view)
         {
-            return NotFound();
+            returnAuthor.error = true;
+            returnAuthor.action = view;
+            return returnAuthor;
         }
+
+        if (id == null || id == 0) return (error(NotFound()));
+
         var authorFromDb = _db.Authors.Find(id);
-        if (authorFromDb == null)
-        {
-            return RedirectToAction("List", "Author");
-        }
-        return View(authorFromDb);
+        if (authorFromDb == null) return (error(RedirectToAction("List", "Author")));
+
+        returnAuthor.error = false;
+        returnAuthor.Author = authorFromDb;
+
+        return returnAuthor;
+    }
+
+    // Find an category from the categories table by an unknown ID
+    private IActionResult GetAuthorView(int? id)
+    {
+        var author = GetAuthor(id);
+        if (author.error) return author.action;
+        return View(author.Author);
     }
 
     // /*
     //     VIEWS
     // */
+
+    // GET
+    // Return author index view with books for author
+    public IActionResult Index(int? id)
+    {
+        var author = GetAuthor(id);
+        if (author.error) return author.action;
+
+        // Create expando objet
+        dynamic authorModel = new System.Dynamic.ExpandoObject();
+
+        // Set author to author associated with id
+        authorModel.Author = author.Author;
+
+        // Find books by author ID
+        authorModel.Books = _db.Books.Where(book => book.AuthorId == id).OrderBy(book => book.Name).ThenBy(book => book.UpdatedAt);
+
+        return View(authorModel);
+    }
 
 
     // GET
@@ -101,7 +142,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     // Return edit author view, with an unknown author ID
     public IActionResult Edit(int? id)
     {
-        return GetAuthor(id);
+        return GetAuthorView(id);
     }
 
     //POST
@@ -127,7 +168,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     // Return delete author view, checking for authentication, with an unknown author ID
     public IActionResult Delete(int? id)
     {
-        return GetAuthor(id);
+        return GetAuthorView(id);
     }
 
     //POST
@@ -136,13 +177,10 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
-        var obj = _db.Authors.Find(id);
-        if (obj == null)
-        {
-            return NotFound();
-        }
+        var author = GetAuthor(id);
+        if (author.error) return author.action;
 
-        _db.Authors.Remove(obj);
+        _db.Authors.Remove(author.Author);
         return SaveDatabase("Author deleted successfully");
     }
 }

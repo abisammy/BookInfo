@@ -26,24 +26,63 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         return RedirectToAction("List", "Category");
     }
 
-    // Find an category from the categories table by an unknown ID
-    private IActionResult GetCategory(int? id)
+    private class ReturnCategory
     {
-        if (id == null || id == 0)
+        public Boolean error { get; set; }
+        public IActionResult? action { get; set; }
+        public Category? Category { get; set; }
+    }
+
+    private ReturnCategory GetCategory(int? id)
+    {
+        ReturnCategory returnCategory = new ReturnCategory();
+        ReturnCategory error(IActionResult view)
         {
-            return NotFound();
+            returnCategory.error = true;
+            returnCategory.action = view;
+            return returnCategory;
         }
+
+        if (id == null || id == 0) return (error(NotFound()));
+
         var categoryFromDb = _db.Categories.Find(id);
-        if (categoryFromDb == null)
-        {
-            return RedirectToAction("List", "Category");
-        }
-        return View(categoryFromDb);
+        if (categoryFromDb == null) return (error(RedirectToAction("List", "Category")));
+
+        returnCategory.error = false;
+        returnCategory.Category = categoryFromDb;
+
+        return returnCategory;
+    }
+
+    // Find an category from the categories table by an unknown ID
+    private IActionResult GetCategoryView(int? id)
+    {
+        var category = GetCategory(id);
+        if (category.error) return category.action;
+        return View(category.Category);
     }
 
     /*
         VIEWS
     */
+
+    // GET
+    // Return category index view with books for category
+    public IActionResult Index(int? id)
+    {
+        var category = GetCategory(id);
+        if (category.error) return category.action;
+
+        // Create expando object
+        dynamic categoryModel = new System.Dynamic.ExpandoObject();
+
+        // Set category to category associated with id
+        categoryModel.Category = category.Category;
+
+        categoryModel.Books = _db.Books.Where(book => book.CategoryId == id).OrderBy(book => book.Name).ThenBy(book => book.UpdatedAt);
+
+        return View(categoryModel);
+    }
 
     // GET
     // Return a partial view with a table of categories
@@ -103,7 +142,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     // Return edit category view, with an unknown category ID
     public IActionResult Edit(int? id)
     {
-        return GetCategory(id);
+        return GetCategoryView(id);
     }
 
     //POST
@@ -134,7 +173,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     // Return delete category view, with an unknown category ID
     public IActionResult Delete(int? id)
     {
-        return GetCategory(id);
+        return GetCategoryView(id);
     }
 
     //POST
@@ -143,13 +182,10 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeletePOST(int? id)
     {
-        var obj = _db.Categories.Find(id);
-        if (obj == null)
-        {
-            return NotFound();
-        }
+        var category = GetCategory(id);
+        if (category.error) return category.action;
 
-        _db.Categories.Remove(obj);
+        _db.Categories.Remove(category.Category);
         return SaveDatabase("Category deleted successfully");
     }
 }

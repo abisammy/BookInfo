@@ -36,7 +36,8 @@ else
                 i++;
                 <tr>
                     <td width="5%">@i</td>
-                    <td width="20%">@obj.Name</td>
+                    <td width="20%"><a asp-controller="Cateogry" asp-action="Index" asp-route-id="@obj.CategoryId">@obj.Name</a>
+                    </td>
                     <td width="55%"><em>@obj.Description</em></td>
                     <td>
                         <div class="btn-group text" role="group">

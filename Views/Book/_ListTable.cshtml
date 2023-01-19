@@ -22,7 +22,8 @@
         {
             IOrderedQueryable<Book>? categoryBooks = books.Where(book => book.CategoryId == obj.CategoryId).OrderBy(book =>
             book.Name);
-            <h2>@obj.Name</h2>
+            <a class="h2 text-secondary text-decoration-none" asp-controller="Category" asp-action="Index"
+    asp-route-id="@obj.CategoryId">@obj.Name</a>
             <partial name="_BookTable" for="@categoryBooks"></partial>
             <br />
         }

@@ -55,7 +55,7 @@ public class LastPages
 
 
     // Return the lastpage stack, controller, action and ID after popping value from lastpage stack
-    public (string lastPages, string controller, string action, int id) Return(string lastPages, string currentPage = "", bool? keepPage = false)
+    public static (string lastPages, string controller, string action, int id) Return(string lastPages, string currentPage = "", bool? keepPage = false)
     {
         // Get the last page and remove it (optional)
         var lastPage = RemoveLastPage(lastPages, keepPage ?? false).value;

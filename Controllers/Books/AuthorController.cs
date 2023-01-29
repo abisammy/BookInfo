@@ -19,11 +19,11 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     /* FUNCTIONS */
-    private IActionResult SaveDatabase(string message)
+    private IActionResult SaveDatabase(string message, string currentPage = "")
     {
         _db.SaveChanges();
         TempData["success"] = message;
-        return RedirectToAction("List", "Author");
+        return RedirectToAction("Return", "LastPage", new { currentPage = currentPage });
     }
 
 

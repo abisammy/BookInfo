@@ -23,6 +23,8 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+        <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="CategoryCreate"
+            asp-route-message="Category not created" class="btn btn-secondary" style="width:150px">Back</a>
     </div>
 </form>
 

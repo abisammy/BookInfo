@@ -7,17 +7,25 @@ public class LastPageController : Controller
     public IActionResult Return(string currentPage = "", bool keepPage = false)
     {
         // Call method from helper, returns tuple
-        var returnValues = LastPages.Return(TempData["lastpages"] as string, currentPage, keepPage);
-        TempData["lastpages"] = returnValues.lastPages;
+        var returnValues = LastPages.Return(TempData["lastpage"] as string, currentPage, keepPage);
+        TempData["lastpage"] = returnValues.lastPages;
+
 
         // If there is an ID
         if (returnValues.id == 0)
         {
-            return RedirectToAction(returnValues.controller, returnValues.action);
+            return RedirectToAction(returnValues.action, returnValues.controller);
         }
         else
         {
-            return RedirectToAction(returnValues.controller, returnValues.action, new { id = returnValues.id });
+            return RedirectToAction(returnValues.action, returnValues.controller, new { id = returnValues.id });
         }
+    }
+
+    // Send a notification and return
+    public IActionResult Cancel(string? message, string? currentpage)
+    {
+        if (message != null) TempData["info"] = message;
+        return Return(currentpage);
     }
 }

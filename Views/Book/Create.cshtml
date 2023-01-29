@@ -61,10 +61,11 @@
             <input data-val="false" value="This book has no description" asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:300px">Create </button>
+        <button type="submit" class="btn btn-primary" style="width:300px" asp-route-returnToView="true">Create</button>
+        <button type="submit" class="btn btn-primary" style="width:300px">Create and go back</button>
+        <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="BookCreate"
+            asp-route-message="Book not created" class="btn btn-secondary" style="width:150px">Back</a>
     </div>
-
-
 </form>
 
 @section Scripts{

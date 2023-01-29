@@ -19,11 +19,11 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     /* FUNCTIONS */
-    private IActionResult SaveDatabase(string message)
+    private IActionResult SaveDatabase(string message, string currentPage = "", bool returnToCreate = false)
     {
         _db.SaveChanges();
         TempData["success"] = message;
-        return RedirectToAction("List", "Category");
+        return RedirectToAction("Return", "LastPage", new { currentPage = currentPage, keepPage = returnToCreate });
     }
 
     private class ReturnCategory

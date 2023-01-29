@@ -6,6 +6,7 @@ public class LastPages
     // Add page ID to the last page array
     public static string AddLastPage(string lastPages, string pageId)
     {
+        if (lastPages == null) lastPages = "";
         void addItem()
         {
             lastPages += "-" + pageId;
@@ -40,7 +41,7 @@ public class LastPages
     }
 
     // Remove the last value of the lastpage temp data, by splitting it into an array and removing the value
-    private static (string[] lastPages, string value) RemoveLastPage(string lastPages, bool keepPage)
+    private static (string lastPages, string value) RemoveLastPage(string lastPages, bool keepPage)
     {
         string[] lastPagesArray = lastPages.Split("-");
         string value = lastPagesArray[^1];
@@ -49,8 +50,7 @@ public class LastPages
         {
             lastPages = string.Join('-', lastPagesArray.SkipLast(1).ToArray());
         }
-
-        return (lastPagesArray, value);
+        return (lastPages, value);
     }
 
 
@@ -58,10 +58,11 @@ public class LastPages
     public static (string lastPages, string controller, string action, int id) Return(string lastPages, string currentPage = "", bool? keepPage = false)
     {
         // Get the last page and remove it (optional)
-        var lastPage = RemoveLastPage(lastPages, keepPage ?? false).value;
+        var returnValue = RemoveLastPage(lastPages, keepPage ?? false);
 
-        // If the current page is equal to the last page, then remove the last page again
-        if (currentPage == lastPage) lastPage = RemoveLastPage(lastPages, keepPage ?? false).value;
+        if (currentPage == returnValue.value) returnValue = RemoveLastPage(returnValue.lastPages, keepPage ?? false);
+
+        var lastPage = returnValue.value;
 
         if (lastPage == null) return (lastPages, "Index", "Home", 0);
 
@@ -84,6 +85,6 @@ public class LastPages
             action = actionSplit[0];
             id = Convert.ToInt32(actionSplit[1]);
         }
-        return (lastPages, controller, action, id);
+        return (returnValue.lastPages, controller, action, id);
     }
 }

@@ -4,7 +4,7 @@ using BookInfo.Data;
 using System.Dynamic;
 using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
-
+using BookInfo.Helpers;
 
 namespace BookInfo.Controllers;
 
@@ -68,11 +68,11 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
 
 
     // Save the changes to the database, send a notification 
-    private IActionResult SaveDatabase(string message)
+    private IActionResult SaveDatabase(string message, string currentPage = "", bool returnToView = false)
     {
         _db.SaveChanges();
         TempData["success"] = message;
-        return RedirectToAction("List", "Book");
+        return RedirectToAction("Return", "LastPage", new { currentPage = currentPage, keepPage = returnToView });
     }
 
     /* 
@@ -83,6 +83,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     // Return the index view of the book
     public IActionResult Index(int? id)
     {
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"BookIndex{id}");
         return GetBookView(id);
     }
 
@@ -131,6 +132,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult Create()
     {
         setDropdowns();
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, "BookCreate");
         return View();
     }
 
@@ -138,7 +140,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     // Create book, optionally creating an author and publisher
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Book obj)
+    public IActionResult Create(Book obj, bool returnToView = false)
     {
         if (obj.Description == null)
         {
@@ -239,9 +241,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Books.Add(obj);
-            _db.SaveChanges();
-            TempData["success"] = "Book created successfully";
-            return RedirectToAction("List", "Book");
+            return SaveDatabase("Book created successfully", "BookCreate", returnToView);
         }
 
         return View(obj);
@@ -252,6 +252,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult Edit(int? id)
     {
         setDropdowns();
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"BookEdit_{id}");
         return GetBookView(id);
     }
 
@@ -273,7 +274,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Books.Update(obj);
-            return SaveDatabase("Book edited successfully");
+            return SaveDatabase("Book edited successfully", $"BookEdit_{obj.BookId}");
         }
         setDropdowns();
         return View(obj);

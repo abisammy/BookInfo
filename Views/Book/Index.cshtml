@@ -28,18 +28,18 @@
         </tr>
         <tr>
             <th class="text-end">Category</th>
-            <td><a>@Model.Category.Name</a></td>
+            <td><a asp-controller="Category"asp-action="Index" asp-route-id="@Model.Category.CategoryId">@Model.Category.Name</a></td>
         </tr>
         <tr>
             <th class="text-end">Author</th>
             <td>
-                <a>@Model.Author.Name</a>
+                <a asp-controller="Author" asp-action="Index" asp-route-id="@Model.Author.AuthorId">@Model.Author.Name</a>
             </td>
         </tr>
         <tr>
             <th class="text-end">Publisher</th>
             <td>
-                <a>@Model.Publisher.Name</a> </a>
+                <a asp-controller="Publisher" asp-action="Index" asp-route-id="@Model.Publisher.PublisherId">@Model.Publisher.Name</a> </a>
             </td>
         </tr>
         <tr>

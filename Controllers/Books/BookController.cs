@@ -83,7 +83,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     // Return the index view of the book
     public IActionResult Index(int? id)
     {
-        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"BookIndex{id}");
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"BookIndex_{id}");
         return GetBookView(id);
     }
 

@@ -1,0 +1,51 @@
+@model User
+@using BookInfo.Models;
+@{
+    ViewData["Title"] = "Create user";
+    string password = "";
+    if (Model != null)
+    {
+        password = Model.Password;
+    }
+}
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Create User</h2>
+            <br />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" type="password" onmouseleave="changeToPassword(this)"
+                onmouseenter="changeToText(this)" value="@password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="AccountType"></label>
+            @Html.DropDownListFor(m => m.AccountType, new SelectList(Enum.GetValues(typeof(AccountType))))
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+        <a asp-controller="User" asp-action="List" class="btn btn-secondary" style="width:150px">Back</a>
+    </div>
+</form>
+
+@section Scripts{
+@{
+    <partial name="_ValidationScriptsPartial" />
+}
+}
+
+<script>
+    function changeToText(element) {
+        element.type = "text"
+    }
+    function changeToPassword(element) {
+        element.type = "password"
+    }
+</script>

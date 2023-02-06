@@ -7,7 +7,7 @@
                 <th>Book Name</th>
                 <th>Author</th>
                 <th>Publisher</th>
-                @if (ViewBag.Buttons != false)
+                @if (ViewBag.Buttons != false && User.Identity.IsAuthenticated)
                 {
                     <th></th>
                 }
@@ -32,7 +32,7 @@
                         <a asp-controller="Publisher" asp-action="Index"
                     asp-route-id="@book.PublisherId">@book.Publisher.Name</a>
                     </td>
-                    @if (ViewBag.Buttons != false)
+                    @if (ViewBag.Buttons != false && User.Identity.IsAuthenticated)
                     {
                         <td>
                             <div class="btn-group text" role="group">

@@ -33,6 +33,30 @@
                         </li>
                     </ul>
                 </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="Login">Login</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item nav-link row align-items-center">
+                                <div>
+                                    <strong>Hello @User.Identity.Name</strong>
+                                    @if (User.IsInRole(((int)AccountType.Administrator).ToString()))
+                                    {
+                                        <em>(admin)</em>
+                                    }
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="Logout">&nbsp;&nbsp;Logout</a>
+                            </li>
+                        }
+                </div>
             </div>
         </nav>
     </header>

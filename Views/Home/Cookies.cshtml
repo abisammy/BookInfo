@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Cookies";
+}
+<h1 class="text-primary">Cookies</h1>
+<p><em>These are the cookies we use</em></p>
+@{
+    string[] cookieTypes = {"Required", "Optional"};
+
+    string[,] cookie = new string[,]{
+        {"AntiForgeryToken", cookieTypes[0], "This enables greater website security agaisnst cross site request forgery"},
+        {"Login details", cookieTypes[1],"By using cookies, we are able to store login credentials locally, meaning you don't have to login every time."},
+        };
+
+    for (int i = 0; i < cookie.GetLength(0); i++)
+    {
+        <div >
+            <h2 class="text-secondary">@cookie[i, 0]</h2>
+            <p><span><strong>Type: </strong>@cookie[i, 1]</span><br/><span><em>@cookie[i,2]</em></span></p>
+        </div>
+    }
+}

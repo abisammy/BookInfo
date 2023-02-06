@@ -5,9 +5,11 @@ using System.Dynamic;
 using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using BookInfo.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookInfo.Controllers;
 
+[AuthorizeUser("List", "Book")]
 public class BookController : Microsoft.AspNetCore.Mvc.Controller
 {
     /* 
@@ -81,6 +83,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return the index view of the book
+    [AllowAnonymous]
     public IActionResult Index(int? id)
     {
         TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"BookIndex_{id}");
@@ -89,6 +92,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return a partial view with a table of books, with a given search text that will be queried
+    [AllowAnonymous]
     public PartialViewResult SearchBooks(string? searchText)
     {
         // Create an expando model, which allows for passing multiple models to a view
@@ -119,6 +123,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
 
     //GET
     // Return the book list view
+    [AllowAnonymous]
     public IActionResult List()
     {
         TempData["lastpage"] = "BookList";

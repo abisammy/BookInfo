@@ -13,14 +13,16 @@
         <div class="col-6 text-end">
             <a asp-controller="LastPage" asp-action="Return" asp-route-currentpage="@currentpage"
                 class="btn btn-secondary">Back</a>
-            <a asp-controller="Book" asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-primary"> <i
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Book" asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-primary"> <i
                     class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
-            <a asp-controller="Book" asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-danger"> <i
-                    class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
+                <a asp-controller="Book" asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-danger">
+                    <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
+            }
         </div>
     </div>
     <p><em>@Model.Description</em></p>
-
     <table class="table table-bordered table-striped" style="width:100%">
         <tr>
             <th class="text-primary text-end">ISBN</th>
@@ -28,18 +30,21 @@
         </tr>
         <tr>
             <th class="text-end">Category</th>
-            <td><a asp-controller="Category"asp-action="Index" asp-route-id="@Model.Category.CategoryId">@Model.Category.Name</a></td>
+            <td><a asp-controller="Category" asp-action="Index"
+                    asp-route-id="@Model.Category.CategoryId">@Model.Category.Name</a></td>
         </tr>
         <tr>
             <th class="text-end">Author</th>
             <td>
-                <a asp-controller="Author" asp-action="Index" asp-route-id="@Model.Author.AuthorId">@Model.Author.Name</a>
+                <a asp-controller="Author" asp-action="Index"
+                    asp-route-id="@Model.Author.AuthorId">@Model.Author.Name</a>
             </td>
         </tr>
         <tr>
             <th class="text-end">Publisher</th>
             <td>
-                <a asp-controller="Publisher" asp-action="Index" asp-route-id="@Model.Publisher.PublisherId">@Model.Publisher.Name</a> </a>
+                <a asp-controller="Publisher" asp-action="Index"
+                    asp-route-id="@Model.Publisher.PublisherId">@Model.Publisher.Name</a> </a>
             </td>
         </tr>
         <tr>

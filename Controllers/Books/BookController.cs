@@ -147,11 +147,13 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Book obj, bool returnToView = false)
     {
+        // Set default description
         if (obj.Description == null)
         {
             obj.Description = "This book has no description";
             ModelState.Remove("Description");
         }
+
         // Whether the user used the dropdowns
         bool useAuthorDropdown = false;
         bool usePublisherDropdown = false;
@@ -169,7 +171,7 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
             obj.Author = _db.Authors.Where(a => a.AuthorId == obj.AuthorId).First();
         }
 
-        // Same as above except for publishers (line 154)
+        // Same as above except for publishers (line 162)
         if (obj.PublisherId != 0)
         {
             usePublisherDropdown = true;
@@ -218,16 +220,21 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         }
 
         /* 
-            Same as previous if, else if statement, except for publishers (line 123)
+            Same as previous if, else if statement, except for publishers (line 191)
         */
         if (obj.Publisher.Name == null && !usePublisherDropdown)
         {
             return View(obj);
         }
+        // Else if they didn't use the dropdown
         else if (!usePublisherDropdown)
         {
             string publisherName = obj.Publisher.Name;
+
+            // Find if the publisher exists in the database 
             Publisher? publisher = _db.Publishers.SingleOrDefault(p => p.Name == publisherName);
+
+            // If publisher doesn't exist then create one
             if (publisher == null)
             {
                 publisher = new Publisher()
@@ -238,6 +245,8 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
                 _db.SaveChanges();
 
             }
+
+            // Whether publisher exists or not, set the publisher manually
             obj.Publisher = publisher;
             obj.PublisherId = publisher.PublisherId;
         }

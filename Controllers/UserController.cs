@@ -318,7 +318,15 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         // Sign in the user into the browser, saving the cookie
         HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props).Wait();
 
-        return RedirectToAction("Index", "Home");
+        if (validatePassword(credentials.Password) != "VALID" && findUser.AccountType == AccountType.Administrator)
+        {
+            TempData["info"] = "Please edit your password";
+            return RedirectToAction("Edit", "User", new { id = findUser.UserId });
+        }
+        else
+        {
+            return RedirectToAction("Index", "Home");
+        }
     }
 
     // Delete the cookie, using the asp.net

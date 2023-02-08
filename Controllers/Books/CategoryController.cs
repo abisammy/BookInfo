@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using BookInfo.Data;
 using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 using BookInfo.Models;
+using BookInfo.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookInfo.Controllers;
 
+[AuthorizeUser("List", "Category")]
 public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
 {
     /*
@@ -68,10 +71,12 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return category index view with books for category
+    [AllowAnonymous]
     public IActionResult Index(int? id)
     {
         var category = GetCategory(id);
         if (category.error) return category.action;
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"CategoryIndex_{id}");
 
         // Create expando object
         dynamic categoryModel = new System.Dynamic.ExpandoObject();
@@ -86,6 +91,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return a partial view with a table of categories
+    [AllowAnonymous]
     public PartialViewResult SearchCategories(string? searchText)
     {
         if (searchText == null) searchText = "";
@@ -100,6 +106,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return the category list view
+    [AllowAnonymous]
     public IActionResult List()
     {
         TempData["lastpage"] = "CategoryList";
@@ -112,7 +119,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult Create()
     {
         // TODO: Authenticate
-        // TODO: Add last page
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, "CategoryCreate");
 
         return View();
     }
@@ -121,7 +128,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     // Create author, if form is valid, checking for authentication
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Category obj, bool? returnToView)
+    public IActionResult Create(Category obj, bool returnToView = false)
     {
         // TODO: Authenticate
         if (obj.Description == null)
@@ -132,7 +139,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Categories.Add(obj);
-            return SaveDatabase("Category created succesfully");
+            return SaveDatabase("Category created succesfully", "CategoryCreate", returnToView);
         }
 
         return View(obj);
@@ -142,6 +149,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     // Return edit category view, with an unknown category ID
     public IActionResult Edit(int? id)
     {
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"CategoryEdit_{id}");
         return GetCategoryView(id);
     }
 
@@ -163,7 +171,7 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Categories.Update(obj);
-            return SaveDatabase("Category edited successfully");
+            return SaveDatabase("Category edited successfully", $"CategoryEdit_{obj.CategoryId}");
         }
 
         return View(obj);

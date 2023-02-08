@@ -24,7 +24,10 @@ else
             <tr>
                 <th></th>
                 <th>Name</th>
-                <th></th>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <th></th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -38,16 +41,19 @@ else
                     <td width="15%">@i</td>
                     <td width="60%"><a asp-controller="Publisher" asp-action="Index"
                     asp-route-id="@obj.PublisherId">@obj.Name</a></td>
-                    <td>
-                        <div class="btn-group text" role="group">
-                            <a asp-controller="Publisher" asp-action="Edit" asp-route-id="@obj.PublisherId"
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <td>
+                            <div class="btn-group text" role="group">
+                                <a asp-controller="Publisher" asp-action="Edit" asp-route-id="@obj.PublisherId"
                         class="btn btn-primary mx-2">
-                                <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
-                            <a asp-controller="Publisher" asp-action="Delete" asp-route-id="@obj.PublisherId"
+                                    <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
+                                <a asp-controller="Publisher" asp-action="Delete" asp-route-id="@obj.PublisherId"
                         class="btn btn-danger mx-2">
-                                <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
-                        </div>
-                    </td>
+                                    <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
+                            </div>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

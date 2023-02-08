@@ -17,7 +17,10 @@
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+        <button type="submit" class="btn btn-primary" style="width:150px" asp-route-returnToView="true">Create</button>
+        <button type="submit" class="btn btn-primary" style="width:150px">Create and go back</button>
+        <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="AuthorCreate"
+            asp-route-message="Author not created" class="btn btn-secondary" style="width:150px">Back</a>
     </div>
 </form>
 

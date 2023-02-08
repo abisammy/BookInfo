@@ -7,6 +7,11 @@
     <title>@ViewData["Title"] - BookInfo</title>
     <link rel="stylesheet" href="~/css/bootswatchTheme.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <style>
+        .strongHover:hover {
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,6 +36,14 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Publisher" asp-action="List">Publishers</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated &&
+                        User.IsInRole(((int)AccountType.Administrator).ToString()))
+                        {
+                            <li class="nav-item">
+                                <a class="strongHover nav-link text-success" asp-area="" asp-controller="User"
+                                asp-action="List">Manage Users</a>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
@@ -48,7 +61,6 @@
                                     <strong>Hello @User.Identity.Name</strong>
                                     @if (User.IsInRole(((int)AccountType.Administrator).ToString()))
                                     {
-                                        <em>(admin)</em>
                                     }
                                 </div>
                             </li>

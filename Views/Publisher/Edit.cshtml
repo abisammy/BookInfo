@@ -16,8 +16,13 @@
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
+        @{
+            string currentPage = $"PublisherEdit_{@Model.PublisherId}";
+        }
         <button type="submit" class="btn btn-primary" style="width:150px"
             asp-route-PublisherId=@Model.PublisherId>Edit</button>
+        <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="@currentPage"
+            asp-route-message="Publisher not edited" class="btn btn-secondary" style="width:150px">Back</a>
     </div>
 </form>
 

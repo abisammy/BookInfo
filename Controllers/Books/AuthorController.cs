@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using BookInfo.Data;
 using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 using BookInfo.Models;
+using BookInfo.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookInfo.Controllers;
 
+[AuthorizeUser("List", "Author")]
 public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
 {
     /*
@@ -19,11 +22,11 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     /* FUNCTIONS */
-    private IActionResult SaveDatabase(string message, string currentPage = "")
+    private IActionResult SaveDatabase(string message, string currentPage = "", bool returnToCreate = false)
     {
         _db.SaveChanges();
         TempData["success"] = message;
-        return RedirectToAction("Return", "LastPage", new { currentPage = currentPage });
+        return RedirectToAction("Return", "LastPage", new { currentPage = currentPage, keepPage = returnToCreate });
     }
 
 
@@ -69,10 +72,14 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return author index view with books for author
+    [AllowAnonymous]
     public IActionResult Index(int? id)
     {
         var author = GetAuthor(id);
         if (author.error) return author.action;
+
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"AuthorIndex_{id}");
+
 
         // Create expando objet
         dynamic authorModel = new System.Dynamic.ExpandoObject();
@@ -89,6 +96,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return a partial view with a table of authors
+    [AllowAnonymous]
     public PartialViewResult SearchAuthors(string? searchText)
     {
         if (searchText == null) searchText = "";
@@ -103,6 +111,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return the author list view
+    [AllowAnonymous]
     public IActionResult List()
     {
         TempData["lastpage"] = "AuthorList";
@@ -115,7 +124,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult Create()
     {
         // TODO: Authenticate
-        // TODO: Add last page
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, "AuthorCreate");
 
         return View();
     }
@@ -124,14 +133,14 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     // Create author, if the form is valid, checking for authentication
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Author obj, bool? returnToView)
+    public IActionResult Create(Author obj, bool returnToView = false)
     {
         // TODO: Auhenticate
 
         if (ModelState.IsValid)
         {
             _db.Authors.Add(obj);
-            return SaveDatabase("Author created successfully");
+            return SaveDatabase("Author created successfully", "AuthorCreate", returnToView);
         }
 
         // If form isn't valid
@@ -142,6 +151,8 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     // Return edit author view, with an unknown author ID
     public IActionResult Edit(int? id)
     {
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"AuthorEdit_{id}");
+
         return GetAuthorView(id);
     }
 
@@ -158,7 +169,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Authors.Update(obj);
-            return SaveDatabase("Author edited successfully");
+            return SaveDatabase("Author edited successfully", $"AuthorEdit_{obj.AuthorId}");
         }
 
         return View(obj);

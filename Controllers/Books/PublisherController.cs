@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using BookInfo.Data;
 using PartialViewResult = Microsoft.AspNetCore.Mvc.PartialViewResult;
 using BookInfo.Models;
+using BookInfo.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookInfo.Controllers;
 
+[AuthorizeUser("List", "Publisher")]
 public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
 {
     /*
@@ -19,11 +22,11 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     /* FUNCTIONS */
-    private IActionResult SaveDatabase(string message)
+    private IActionResult SaveDatabase(string message, string currentPage = "", bool returnToCreate = false)
     {
         _db.SaveChanges();
         TempData["success"] = message;
-        return RedirectToAction("List", "Publisher");
+        return RedirectToAction("Return", "LastPage", new { currentPage = currentPage, keepPage = returnToCreate });
     }
 
     private class ReturnPublisher
@@ -68,10 +71,14 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return publisher index view with books for publisher
+    [AllowAnonymous]
     public IActionResult Index(int? id)
     {
         var publisher = GetPublisher(id);
         if (publisher.error) return publisher.action;
+
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"PublisherIndex_{id}");
+
 
         // Create expando object
         dynamic publisherModel = new System.Dynamic.ExpandoObject();
@@ -87,6 +94,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return a partial view with a table of publishers
+    [AllowAnonymous]
     public PartialViewResult SearchPublishers(string? searchText)
     {
         if (searchText == null) searchText = "";
@@ -101,6 +109,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
 
     // GET
     // Return the publisher list view
+    [AllowAnonymous]
     public IActionResult List()
     {
         TempData["lastpage"] = "PublisherList";
@@ -113,7 +122,8 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     public IActionResult Create()
     {
         // TODO: Authenticate
-        // TODO: Add last page
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, "PublisherCreate");
+
 
         return View();
     }
@@ -122,14 +132,14 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     // Create author, if the form is valid, checking for authentication
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Publisher obj, bool? returnToView)
+    public IActionResult Create(Publisher obj, bool returnToView = false)
     {
         // TODO: Auhenticate
 
         if (ModelState.IsValid)
         {
             _db.Publishers.Add(obj);
-            return SaveDatabase("Publisher created successfully");
+            return SaveDatabase("Publisher created successfully", "PublisherCreate", returnToView);
         }
 
         // If form isn't valid
@@ -140,6 +150,8 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     // Return edit author view, with an unknown author ID
     public IActionResult Edit(int? id)
     {
+        TempData["lastpage"] = LastPages.AddLastPage(TempData["lastpage"] as string, $"PublisherEdit_{id}");
+
         return GetPublisherView(id);
     }
 
@@ -156,7 +168,7 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         if (ModelState.IsValid)
         {
             _db.Publishers.Update(obj);
-            return SaveDatabase("Publisher edited successfully");
+            return SaveDatabase("Publisher edited successfully", $"PublisherEdit_{obj.PublisherId}");
         }
 
         return View(obj);

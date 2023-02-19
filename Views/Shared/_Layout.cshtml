@@ -65,6 +65,7 @@
                                     <strong>Hello @User.Identity.Name</strong>
                                     @if (User.IsInRole(((int)AccountType.Administrator).ToString()))
                                     {
+                                        <em>(admin)</em>
                                     }
                                 </div>
                             </li>

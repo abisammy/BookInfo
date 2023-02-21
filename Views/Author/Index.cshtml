@@ -1,20 +1,27 @@
 ﻿@model dynamic
 @{
+    @* Explicitly define data passed form model, to enable intellisense *@
     Author author = Model.Author;
     IOrderedQueryable<Book>? books = Model.Books;
+
     ViewData["Title"] = $"{author.Name}";
     TempData.Keep("lastpage");
+
+    @* Define currentpage, for lastpage system *@
     string currentpage = $"AuthorIndex_{author.AuthorId}";
 }
 
 <div class="container p-3">
     <div class="row pt-4">
+        @* Header *@
         <div class="col-6">
             <h1 class="text-primary">@author.Name</h1>
         </div>
         <div class="col-6 text-end">
+            @* Back button *@
             <a asp-controller="LastPage" asp-action="Return" asp-route-currentpage="@currentpage"
                 class="btn btn-secondary">Back</a>
+            @* Edit and delete button for librarians *@
             @if (User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Author" asp-action="Edit" asp-route-id="@author.AuthorId" class="btn btn-primary"> <i
@@ -24,6 +31,8 @@
             }
         </div>
     </div>
+
+    @* Table with author information *@
     <table class="table table-bordered table-striped" style="width:100%">
         <tr>
             <th class="text-end">Updated at</th>

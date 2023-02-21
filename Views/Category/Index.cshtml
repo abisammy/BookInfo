@@ -1,20 +1,27 @@
 @model dynamic
 @{
+    @* Explicitly define data passed from model, to enable intellisense *@
     Category category = Model.Category;
     IOrderedQueryable<Book>? books = Model.Books;
+
     ViewData["Title"] = $"{category.Name}";
     TempData.Keep("lastpage");
+
+    @* Define currentpage, for last page system *@
     string currentpage = $"CategoryIndex_{category.CategoryId}";
 }
 
 <div class="container p-3">
     <div class="row pt-4">
+        @* Header *@
         <div class="col-6">
             <h1 class="text-primary">@category.Name</h1>
         </div> 
             <div class="col-6 text-end">
+                @* Back button *@
                 <a asp-controller="LastPage" asp-action="Return" asp-route-currentpage="@currentpage"
                     class="btn btn-secondary">Back</a>
+                @* Edit and delete button for librarians *@
                 @if(User.Identity.IsAuthenticated)
                 {
                     <a asp-controller="Category" asp-action="Edit"          asp-route-id="@category.CategoryId" class="btn btn-primary"> <i
@@ -26,6 +33,7 @@
     </div>
     <p><em>@category.Description</em></p>
 
+    @* Table with category information *@
     <table style="width:100%" class="table table-bordered table-striped">
         <tr>
             <th class="text-primary text-end" width="15%" >ID</th>
@@ -45,6 +53,8 @@
     </table>
     <br/>
     <br/>
+
+    @* Table with books for category *@
     @{
         if(books.Count() == 0)
         {

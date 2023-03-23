@@ -1,7 +1,8 @@
 @model Author
 @{
-    ViewData["Title"] = $"Edit author {Model.Name}";
+    @* Keep the lastpage tempdata so it is not cleared *@
     TempData.Keep("lastpage");
+    ViewData["Title"] = $"Edit author {Model.Name}";
 }
 
 @* Author editing form *@
@@ -11,15 +12,19 @@
             <h2 class="text-primary">Edit Author</h2>
             <br />
         </div>
+        @* THis decalres built in bullet points with the problems (if any) in a form *@
         <div asp-validation-summary="All"></div>
+        @* Input for name *@
         <div class="mb-3">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         @{
+            @* Declare variable for current page ID as string literals cannot be used in asp-route-currentpage *@
             string currentPage = $"AuthorEdit_{@Model.AuthorId}";
         }
+        @* SUbmit buttons *@
         <button type="submit" class="btn btn-primary" style="width:150px"
             asp-route-AuthorId=@Model.AuthorId>Edit</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="@currentPage"

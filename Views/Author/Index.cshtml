@@ -36,6 +36,7 @@
     <table class="table table-bordered table-striped" style="width:100%">
         <tr>
             <th class="text-end">Updated at</th>
+            @* Updated at, propoerly formatted as a string *@
             <td>@{
                     @author.UpdatedAt.ToLongTimeString()
                     <text>&nbsp;on&nbsp;</text>
@@ -49,6 +50,7 @@
     <br />
     <br />
     @{
+        @* If there are no books by the author display this message *@
         if (books.Count() == 0)
         {
             <em>
@@ -58,6 +60,7 @@
             <br />
         }
         else
+        @* Else display the information using the partial view for books *@
         {
             <h2>Books</h2>
             ViewBag.Buttons = false;

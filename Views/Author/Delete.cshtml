@@ -1,6 +1,7 @@
 @model Author
 @{
     ViewData["Title"] = $"Delete author {Model.Name}";
+    @* Keep the lastpage tempdata so it is not clared *@
     TempData.Keep("lastpage");
 }
 
@@ -12,11 +13,13 @@
             <br />
         </div>
         <div class="mb-3">
-            <div asp-validation-summary="All"></div>
-
+            @* Value of the name *@
             <label asp-for="Name"></label>
+            @* NOTE: the input is disabled as it is only meant to display the name that is about to be delted,
+                and is not inteded for the user to modfiy the value it *@
             <input asp-for="Name" disabled class="form-control" />
         </div>
+        @* Shbmit buttons *@
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="Author not deleted" class="btn
             btn-secondary" style="width:150px">Back</a>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>

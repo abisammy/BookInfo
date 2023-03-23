@@ -1,30 +1,39 @@
 @model Book
 @{
     ViewData["Title"] = "Edit book";
+    @* Keep the lastpage tempdata so it is not cleared *@
     TempData.Keep("lastpage");
+
+    @* Declare the dropdowns passed in from the controller as variables to enable intellisense*@
     SelectList categoryList = ViewBag.CategoryList;
     SelectList authorList = ViewBag.AuthorList;
     SelectList publisherList = ViewBag.PublisherList;
 }
 
+@* Edit form *@
 <form method="post">
+    @* Hidden input, so that when form is submitted the value of the current ID is passed to the controller *@
     <input asp-for="BookId" hidden>
     <div class="border p-3 mt-4">
         <div class="pb-2 row">
             <h2>Edit Book</h2>
             <br />
         </div>
+        @* This declares built in bullet points with problems if there is an error in the form *@
         <div asp-validation-summary="All"></div>
+        @* Input for book name *@
         <div class="mb-3">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
+        @* Input for ISBN *@
         <div class="mb-3">
             <label asp-for="ISBN"></label>
             <input asp-for="ISBN" class="form-control" />
             <span asp-validation-for="ISBN" class="text-danger"></span>
         </div>
+        @* Input for CategryId *@
         <div class="mb-3">
             <label asp-for="CategoryId"></label>
             &nbsp;|&nbsp;
@@ -32,9 +41,11 @@
                     selected category</a></em>
             &nbsp;|&nbsp;
             <em><a asp-controller="Category" asp-action="Create">Create new category</a></em>
+            @* Declare dropdown for categories *@
             @Html.DropDownListFor(m=> m.CategoryId, categoryList, htmlAttributes: new { @class =
             "form-control", @onChange="changeDropdown(this, 'editcategory', 'Category')" })
         </div>
+        @* Input for AuthorId *@
         <div class="mb-3">
             <label asp-for="AuthorId"></label>
             &nbsp;|&nbsp;
@@ -42,9 +53,11 @@
                     selected author</a></em>
             &nbsp;|&nbsp;
             <em><a asp-controller="Author" asp-action="Create">Create new author</a></em>
+            @* Dedlare dropdown for authors *@
             @Html.DropDownListFor(m=> m.AuthorId, authorList, htmlAttributes: new {
             @class = "form-control", @onChange="changeDropdown(this, 'editauthor', 'Author')" })
         </div>
+        @* Input for PublisherId *@
         <div class="mb-3">
             <label asp-for="PublisherId"></label>
             &nbsp;|&nbsp;
@@ -53,17 +66,21 @@
                     selected publisher</a></em>
             &nbsp;|&nbsp;
             <em><a asp-controller="Publisher" asp-action="Create">Create new publisher</a></em>
+            @* Declare dropdown for publishers *@
             @Html.DropDownListFor(m=> m.PublisherId, publisherList, htmlAttributes: new {
             @class = "form-control", @onChange="changeDropdown(this, 'editpublisher', 'Publisher')" })
         </div>
+        @* Input for description *@
         <div class="mb-3">
             <label asp-for="Description"></label>
             <input data-val="false" asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         @{
+            @* Declare variable as cannot use stirng literal in asp-route-currentpage *@
             string currentPage = $"BookEdit_{@Model.BookId}";
         }
+        @* Submit buttons *@
         <button type="submit" class="btn btn-primary" style="width:150px">Edit</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="@currentPage"
             asp-route-message="Book not edited" class="btn btn-secondary" style="width:150px">Back</a>
@@ -71,14 +88,16 @@
 </form>
 
 @section Scripts{
+@* Load the validation scripts *@
 @{
     <partial name="_ValidationScriptsPartial" />
 }
 <script>
-    function changeDropdown(list, element, controller) {
-        const setvalue = list.value;
-        $(`#${element}`).attr("href", "/" + controller + "/Edit/" + setvalue)
+    @* Change the link to edit the instance of the selected value, whenever the value of a dropdown changes *@
+        function changeDropdown(list, element, controller) {
+            const setvalue = list.value;
+            $(`#${element}`).attr("href", "/" + controller + "/Edit/" + setvalue)
 
-    }
+        }
 </script>
 }

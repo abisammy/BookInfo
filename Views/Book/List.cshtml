@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Books";
+    @* Keep the lastpage tempdata so it is not cleared *@
     TempData.Keep("lastpage");
 }
 
@@ -9,6 +10,7 @@
         <div class="col-6">
             <h1 class="text-primary">Books List</h1>
         </div>
+        @* If the user is authenticated show the create button at the top *@
         @if (User.Identity.IsAuthenticated)
         {
 
@@ -20,8 +22,10 @@
     </div>
     <div class="form-inline float-right">
         <label>Search</label>
+        @* Have a text input for the value to search*@
         <input type="text" class="form-control" id="textSearch" />
     </div>
+    @* Shorthand way for inserting mulitple newlines in razor, instead of having to type <br/> twice *@
     @for (int i = 0; i < 2; i++)
     {
         <br />
@@ -34,14 +38,16 @@
 
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
-    $(() => {
-        getBooks();
-
-    @* Update tables when value of textbox changes *@
-            $("#textSearch").on("keyup", () => {
+    @* On page load *@
+        $(() => {
+    @* Get value in search bar *@
                 getBooks();
-            })
-    });
+
+    @* Add event listener to update tables when value of textbox changes *@
+                $("#textSearch").on("keyup", () => {
+                    getBooks();
+                })
+        });
 
     @* Call partial view with value of textbox *@
         function getBooks() {
@@ -50,6 +56,7 @@
                 dataType: "html",
                 method: "GET",
                 data: { searchText: $("#textSearch").val() },
+    @* When we get the data, update the value of the table with the HTML returned *@
                 success: function (res) {
                     $("#listTable").html("").html(res);
                 },

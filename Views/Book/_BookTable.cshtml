@@ -1,12 +1,15 @@
 @model IQueryable<Book>?
 @{
+    @* Craete table for given books *@
     <table class="table table-bordered table-striped w-100">
+        @* Column names *@
         <thead>
             <tr class="text-center">
                 <th></th>
                 <th>Book Name</th>
                 <th>Author</th>
                 <th>Publisher</th>
+                @* If we need to show buttons and the user is authenticated add another column for the buttons *@
                 @if (ViewBag.Buttons != false && User.Identity.IsAuthenticated)
                 {
                     <th></th>
@@ -15,23 +18,29 @@
         </thead>
         <tbody>
             @{
+                @* Declare variable for the book number *@
                 int i = 0;
             }
             @foreach (Book book in Model)
             {
                 i++;
                 <tr class="text-center align-middle">
+                    @* Book number *@
                     <td width="5%">@i</td>
+                    @* Book name linkning to index view *@
                     <td width="30%">
                         <a asp-controller="Book" asp-action="Index" asp-route-id="@book.BookId">@book.Name</a>
                     </td>
+                    @* Author name *@
                     <td width="20%">
                         <a asp-controller="Author" asp-action="Index" asp-route-id="@book.AuthorId">@book.Author.Name</a>
                     </td>
+                    @* Publisher name *@
                     <td width="25%">
                         <a asp-controller="Publisher" asp-action="Index"
                     asp-route-id="@book.PublisherId">@book.Publisher.Name</a>
                     </td>
+                    @* Edit and delete buttons, if they should be shown (as described above) *@
                     @if (ViewBag.Buttons != false && User.Identity.IsAuthenticated)
                     {
                         <td>

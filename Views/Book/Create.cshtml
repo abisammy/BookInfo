@@ -1,66 +1,85 @@
 @model Book
 @{
     ViewData["Title"] = "Create book";
+    @* Keep the lastpage tempdata so it is not cleared *@
     TempData.Keep("lastpage");
+
+    @* Declare teh dropdowns passed in form the controller as variables so intellisense can be used *@
     SelectList categoryList = ViewBag.CategoryList;
     SelectList authorList = ViewBag.AuthorList;
     SelectList publisherList = ViewBag.PublisherList;
-
 }
+
+@* Create form *@
 <form method="post">
     <div class="border p-3 mt-4">
         <div class="pb-2 row">
             <h2>Create Book</h2>
             <br />
         </div>
+        @* This declares built in bullet points with problems if there is an error in the form *@
         <div asp-validation-summary="All"></div>
+
+        @* Input for book name *@
         <div class="mb-3">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
+
+        @* Input for ISBN *@
         <div class="mb-3">
             <label asp-for="ISBN"></label>
             <input asp-for="ISBN" class="form-control" />
             <span asp-validation-for="ISBN" class="text-danger"></span>
         </div>
+
+        @* Input for CategoryId *@
         <div class="mb-3">
             <label asp-for="CategoryId"></label>
             &nbsp;|&nbsp;
             <em><a id="editcategory">Edit selected category</a></em>
             &nbsp;|&nbsp;
             <em><a asp-controller="Category" asp-action="Create">Create new category</a></em>
+            @* Declare dropdown for categories *@
             @Html.DropDownListFor(m=> m.CategoryId, categoryList, "Select category",htmlAttributes: new { @class =
             "form-control", @onChange="changeDropdown(this, 'editcategory', 'Category')" })
         </div>
+        @* Input for AuthorId *@
         <div class="mb-3">
             <label>Select Author</label>
             &nbsp;|&nbsp;
             <em><a id="editauthor">Edit selected author</a></em>
             &nbsp;|&nbsp;
             <em><a asp-controller="Author" asp-action="Create">Create new author</a></em>
+            @* Declare dropdown for authors *@
             @Html.DropDownListFor(m=> m.AuthorId, authorList, "Select author",htmlAttributes: new {
             @class = "form-control", data_val="false", @onChange="changeDropdown(this, 'editauthor', 'Author')" })
             <label>or Input New Author</label>
+            @* Declare text input for author name *@
             <input data-val="false" class="form-control" asp-for="Author.Name">
         </div>
+        @* Input for PublisherId *@
         <div class="mb-3">
             <label>Select Publisher</label>
             &nbsp;|&nbsp;
             <em><a id="editpublisher">Edit selected publisher</a></em>
             &nbsp;|&nbsp;
             <em><a asp-controller="Publisher" asp-action="Create">Create new publisher</a></em>
+            @* Declare dropdown for publisher *@
             @Html.DropDownListFor(m=> m.PublisherId, publisherList, "Select publisher",htmlAttributes: new {
             @class = "form-control", data_val="false", @onChange="changeDropdown(this, 'editpublisher', 'Publisher')" })
             <label>or Input New Publisher</label>
+            @* Declare input for publisher name *@
             <input data-val="false" class="form-control" asp-for="Publisher.Name">
         </div>
-
+        @* Input for description *@
         <div class="mb-3">
             <label asp-for="Description"></label>
             <input data-val="false" value="This book has no description" asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
+        @* Submit buttons *@
         <button type="submit" class="btn btn-primary" style="width:300px" asp-route-returnToView="true">Create</button>
         <button type="submit" class="btn btn-primary" style="width:300px">Create and go back</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="BookCreate"
@@ -69,17 +88,20 @@
 </form>
 
 @section Scripts{
+@* Load the validation scripts *@
 @{
     <partial name="_ValidationScriptsPartial" />
 }
 <script>
-    function changeDropdown(list, element, controller) {
-        const setvalue = list.value;
+    @* Change the link to edit the instance of the selected value, whenever the value of a dropdown changes *@
+        function changeDropdown(list, element, controller) {
+            const setvalue = list.value;
+            @* If there is no selected value clear the link *@
         if (setvalue.length !== 0) {
-            $(`#${element}`).attr("href", "/" + controller + "/Edit/" + setvalue)
-        } else {
-            $(`#${element}`).removeAttr("href")
+                $(`#${element}`).attr("href", "/" + controller + "/Edit/" + setvalue)
+            } else {
+                $(`#${element}`).removeAttr("href")
+            }
         }
-    }
 </script>
 }

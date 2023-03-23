@@ -1,40 +1,53 @@
 @model Book
 @{
     ViewData["Title"] = $"Delete book {Model.Name}";
+    @* Keep the lastpage tempdata so it is not cleared *@
     TempData.Keep("lastpage");
 }
 
+@* Delete form *@
 <form method="post" asp-action="Delete">
+    @* Hidden input, so that when the form is submitted the value of the BookId can be passed to the controller *@
     <input asp-for="BookId" hidden />
-    <div class="border p-3 mt-4">
+    <div class="border p-3 nmt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Delete Book</h2>
             <br />
         </div>
+        @* Value of the name *@
         <div class="mb-3">
             <label asp-for="Name"></label>
+            @* NOTE: the inputs have been disabled as this is only meant to display the book that is about to be
+                deleted,
+                and it is not intended for the use to modify the value of them *@
             <input asp-for="Name" disabled class="form-control" />
         </div>
+        @* Value of the ISBN *@
         <div class="mb-3">
             <label asp-for="ISBN"></label>
             <input asp-for="ISBN" disabled class="form-control" />
         </div>
+        @* Value of the CategoryId *@
         <div class="mb-3">
             <label asp-for="CategoryId"></label>
             <input disabled class="form-control" value="@Model.Category.Name" />
         </div>
+        @* Value of the AuthorId *@
         <div class="mb-3">
             <label asp-for="AuthorId"></label>
             <input disabled class="form-control" value="@Model.Author.Name" />
         </div>
+        @* Value of the PublisherId *@
         <div class="mb-3">
             <label asp-for="PublisherId"></label>
             <input disabled class="form-control" value="@Model.Publisher.Name" />
         </div>
+        @* Value of the Description *@
         <div class="mb-3">
             <label asp-for="Description"></label>
             <input asp-for="Description" disabled class="form-control" />
         </div>
+        @* Return buttons *@
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="Book not deleted" class="btn
             btn-secondary" style="width:150px">Back</a>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>

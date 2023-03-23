@@ -1,8 +1,10 @@
 @model dynamic
 @{
+    @* Declare books and categories from controller as variables to enable intellisense *@
     IQueryable<Book>? books = Model.Books;
     IOrderedQueryable<Category>? categories = Model.Categories;
 
+    @* Display if books is empty *@
     if (books.Count() == 0)
     {
         <em>
@@ -18,12 +20,16 @@
     }
     else
     {
+        @* For each of the categories... *@
         @foreach (Category obj in Model.Categories)
         {
+            @* Get the books in the category *@
             IOrderedQueryable<Book>? categoryBooks = books.Where(book => book.CategoryId == obj.CategoryId).OrderBy(book =>
-            book.Name);
+                            book.Name);
+            @* Add a link for the category name *@
             <a class="h2 text-secondary text-decoration-none" asp-controller="Category" asp-action="Index"
     asp-route-id="@obj.CategoryId">@obj.Name</a>
+            @* Make a table of books for the category with the given books in that category *@
             <partial name="_BookTable" for="@categoryBooks"></partial>
             <br />
         }

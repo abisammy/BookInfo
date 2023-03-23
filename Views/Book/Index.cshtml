@@ -31,15 +31,18 @@
 
     @* Table with book information *@
     <table class="table table-bordered table-striped" style="width:100%">
+        @* Book ISBN *@
         <tr>
             <th class="text-primary text-end">ISBN</th>
             <td>@Convert.ToInt64(Model.ISBN).ToString("###-##-#####-##-#")</td>
         </tr>
+        @* Book Cateogry *@
         <tr>
             <th class="text-end">Category</th>
             <td><a asp-controller="Category" asp-action="Index"
                     asp-route-id="@Model.Category.CategoryId">@Model.Category.Name</a></td>
         </tr>
+        @* Author name *@
         <tr>
             <th class="text-end">Author</th>
             <td>
@@ -47,6 +50,7 @@
                     asp-route-id="@Model.Author.AuthorId">@Model.Author.Name</a>
             </td>
         </tr>
+        @* Publisher name *@
         <tr>
             <th class="text-end">Publisher</th>
             <td>
@@ -54,6 +58,7 @@
                     asp-route-id="@Model.Publisher.PublisherId">@Model.Publisher.Name</a> </a>
             </td>
         </tr>
+        @* Updated at, properly formatted as a string *@
         <tr>
             <th class="text-end">Updated at</th>
             <td>@{

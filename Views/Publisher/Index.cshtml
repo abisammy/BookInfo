@@ -3,6 +3,7 @@
     @* Explicitly define data passed form model, to enable intellisense *@
     Publisher publisher = Model.Publisher;
     IOrderedQueryable<Book>? books = Model.Books;
+
     ViewData["Title"] = $"{publisher.Name}";
     TempData.Keep("lastpage");
 
@@ -35,6 +36,7 @@
     <table class="table table-bordered table-striped" style="width:100%">
         <tr>
             <th class="text-end">Updated at</th>
+            @* Updated at, properly formatted as a string *@
             <td>@{
                     @publisher.UpdatedAt.ToLongTimeString()
                     <text>&nbsp;on&nbsp;</text>
@@ -48,6 +50,7 @@
     <br />
     <br />
     @{
+        @* If there are no books by the publiserh display this *@
         if (books.Count() == 0)
         {
             <em>
@@ -57,6 +60,7 @@
             <br />
         }
         else
+        @* Else display the informaiton using the partial view for books *@
         {
             <h2>Books</h2>
             ViewBag.Buttons = false;

@@ -1,21 +1,26 @@
 @model Publisher
 @{
     ViewData["Title"] = "Create publisher";
+    @* Keep the lastpage tempdata so it is not cleared *@
     TempData.Keep("lastpage");
 }
 
+@* Publisher creation form *@
 <form method="post">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Create Publisher</h2>
             <br />
         </div>
+        @* This declares built in bullet points with the problems (if any) in the form *@
         <div asp-validation-summary="All"></div>
+        @* Input for the name *@
         <div class="mb-3">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
+        @* Submit buttons *@
         <button type="submit" class="btn btn-primary" style="width:150px" asp-route-returnToView="true">Create</button>
         <button type="submit" class="btn btn-primary" style="width:150px">Create and go back</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="PublisherCreate"
@@ -23,6 +28,7 @@
     </div>
 </form>
 
+@* Validate fields locally *@
 @section Scripts{
 @{
     <partial name="_ValidationScriptsPartial" />

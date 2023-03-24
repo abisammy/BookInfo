@@ -1,27 +1,33 @@
 @model Category
 @{
     ViewData["Title"] = "Create category";
+    @* Keep the lastpage tempdata so it is not cleared *@
     TempData.Keep("lastpage");
 }
 
+@* Category creation form *@
 <form method="post">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Create Category</h2>
             <br />
         </div>
+        @* This declares built in bullet points with the problems (if any) in the form *@
         <div asp-validation-summary="All"></div>
+        @* Input for name *@
         <div class="mb-3">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
+        @* Input for description *@
         <div class="mb-3">
             <label asp-for="Description"></label>
             <input asp-for="Description" data-val="false" value="This category has no description"
                 class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
+        @* Submit buttons *@
         <button type="submit" class="btn btn-primary" style="width:150px" asp-route-returnToView="true">Create</button>
         <button type="submit" class="btn btn-primary" style="width:150px">Create and go back</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="CategoryCreate"
@@ -29,6 +35,7 @@
     </div>
 </form>
 
+@* Validate fields locally *@
 @section Scripts{
 @{
     <partial name="_ValidationScriptsPartial" />

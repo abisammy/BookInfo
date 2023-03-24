@@ -1,25 +1,30 @@
 @model Category
 @{
     ViewData["Title"] = $"Delete category {Model.Name}";
+    @* Keep the lsatpage tempdata so it is not cleared*@
     TempData.Keep("lastpage");
 }
 
+@* Delete form *@
 <form method="post" asp-action="Delete">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Delete Category</h2>
             <br />
         </div>
+        @* Value of the name *@
         <div class="mb-3">
-            <div asp-validation-summary="All"></div>
-
             <label asp-for="Name"></label>
+            @* NOTE: the inputs have been disabled as this is only meant to display the book that is about to be
+                deleted, and it is not intended for the user to modify the value of them *@
             <input asp-for="Name" disabled class="form-control" />
         </div>
+        @* Vale of the description *@
         <div class="mb-3">
             <label asp-for="Description"></label>
             <input asp-for="Description" disabled class="form-control" />
         </div>
+        @* Submit buttons *@
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-message="Book not deleted" class="btn
             btn-secondary" style="width:150px">Back</a>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>

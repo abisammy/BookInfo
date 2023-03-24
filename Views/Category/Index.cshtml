@@ -35,10 +35,12 @@
 
     @* Table with category information *@
     <table style="width:100%" class="table table-bordered table-striped">
+        @* ID *@
         <tr>
             <th class="text-primary text-end" width="15%" >ID</th>
             <td>@category.CategoryId</td>
         </tr>
+        @* Updated at properly formatted as a string *@
         <tr>
             <th class="text-end">Updated at</th>
             <td>@{
@@ -55,12 +57,14 @@
     <br/>
 
     @* Table with books for category *@
+    @* if there are no books in the category display this *@
     @{
         if(books.Count() == 0)
         {
             <em>
             <h3>There are currently no books in this category</h3>
             </em><br/>
+            @* Else display the information using the partial view for books *@
         } else {
             <h2>Books</h2>
         ViewBag.Buttons = false;

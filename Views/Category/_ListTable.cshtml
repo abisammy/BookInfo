@@ -3,6 +3,7 @@
 
 @* Returns partial view of table of categories, filtered in the controller by a search string *@
 
+@* Displayed if there are no authors *@
 @if (Model.Count() == 0)
 {
     <em>
@@ -18,12 +19,14 @@
 }
 else
 {
+    @* Table for each of the categories *@
     <table class="text-center align-middle table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
                 <th></th>
                 <th>Category Name</th>
                 <th>Description</th>
+                @* If the user is authenticated, show the buttons *@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <th></th>
@@ -34,14 +37,19 @@ else
             @{
                 int i = 0;
             }
+            @* For each category *@
             @foreach (var obj in Model)
             {
                 i++;
                 <tr>
+                    @* Category number *@
                     <td width="5%">@i</td>
+                    @* Category name *@
                     <td width="20%"><a asp-controller="Category" asp-action="Index" asp-route-id="@obj.CategoryId">@obj.Name</a>
                     </td>
+                    @* Category description *@
                     <td width="55%"><em>@obj.Description</em></td>
+                    @* If the user is authenticated, edit and delete buttons *@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <td>

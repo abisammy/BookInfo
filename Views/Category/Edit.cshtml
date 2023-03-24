@@ -1,29 +1,36 @@
 @model Category
 @{
     ViewData["Title"] = $"Edit category {Model.Name}";
+    @* Keep the lastpage tempdata so it is not cleared *@
     TempData.Keep("lastpage");
 }
 
+@* Category editing form *@
 <form method="post">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Edit Category</h2>
             <br />
         </div>
+        @* THis decalres built in bullet points with the problems (if any) in a form *@
         <div asp-validation-summary="All"></div>
+        @* Input for name *@
         <div class="mb-3">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
+        @* Input for description *@
         <div class="mb-3">
             <label asp-for="Description"></label>
             <input data-val="false" asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         @{
+            @* Declare variable for current page ID as string literals cannot be used in asp-route-currentpage *@
             string currentPage = $"CategoryEdit_{@Model.CategoryId}";
         }
+        @* Submit buttons *@
         <button type="submit" class="btn btn-primary" style="width:150px"
             asp-route-CategoryId=@Model.CategoryId>Edit</button>
         <a asp-controller="LastPage" asp-action="Cancel" asp-route-currentpage="@currentPage"
@@ -32,6 +39,7 @@
     </div>
 </form>
 
+@* Validate fields locally *@
 @section Scripts{
 @{
     <partial name="_ValidationScriptsPartial" />

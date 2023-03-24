@@ -2,48 +2,61 @@
 @{
     ViewData["Title"] = $"Edit user {Model.Username}";
     string password;
+    @* If the user changes the value of the password input and the form is rejected, update the value of the password input
+    *@
     if (Model.Password != "Edit password" && ViewBag.firstTime == false)
     {
         password = Model.Password;
     }
+    @* Else set it to the default (Edit password) *@
     else
     {
         password = "Edit password";
     }
 }
 
+@* User editing form *@
 <form method="post">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Edit User</h2>
             <br />
         </div>
+        @* Input for username *@
         <div class="mb-3">
             <label asp-for="Username"></label>
             <input asp-for="Username" class="form-control" />
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
+        @* Input for password *@
         <div class="mb-3">
             <label asp-for="Password"></label>
+            @* Use JS to change the type of the input to text when the mouse is hovered over it so the admin can see
+                what password is being inputted*@
             <input asp-for="Password" type="text" onmouseleave="changeToPassword(this)"
                 onmouseenter="changeToText(this)" class="form-control" value="@password" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
+        @* Dropdown for account type *@
         <div class="mb-3">
             <label asp-for="AccountType"></label>
+            @* Auto get values for the enum so they dont have to be set manually *@
             @Html.DropDownListFor(m => m.AccountType, new SelectList(Enum.GetValues(typeof(AccountType))))
         </div>
+        @* Submit buttons *@
         <button type="submit" class="btn btn-primary" style="width:150px" asp-route-UserId=@Model.UserId>Edit</button>
         <a asp-controller="User" asp-action="List" class="btn btn-secondary" style="width:150px">Back</a>
     </div>
 </form>
 
+@* Enable client-side validation *@
 @section Scripts{
 @{
     <partial name="_ValidationScriptsPartial" />
 }
 }
 
+@* JS to change input type (as above) *@
 <script>
     function changeToText(element) {
         element.type = "text"

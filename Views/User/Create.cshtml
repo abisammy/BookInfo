@@ -2,32 +2,40 @@
 @using BookInfo.Models;
 @{
     ViewData["Title"] = "Create user";
+    @* Declare value of the password input *@
     string password = "";
     if (Model != null)
     {
+        @* If form was rejected, set the value of the input the password that was inputted into the field orignally *@
         password = Model.Password;
     }
 }
-
+@* User creation form *@
 <form method="post">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Create User</h2>
             <br />
         </div>
+        @* Input for username *@
         <div class="mb-3">
             <label asp-for="Username"></label>
             <input asp-for="Username" class="form-control" />
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
+        @* Input for password *@
         <div class="mb-3">
             <label asp-for="Password"></label>
+            @* Use JS to change the type of the input to text when mouse is hovered over it
+                so the admin can see what password is being inputted *@
             <input asp-for="Password" type="password" onmouseleave="changeToPassword(this)"
                 onmouseenter="changeToText(this)" value="@password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
+        @* Dropdown for account type *@
         <div class="mb-3">
             <label asp-for="AccountType"></label>
+            @* Automatically get types from enum so they dont have to be hard coded*@
             @Html.DropDownListFor(m => m.AccountType, new SelectList(Enum.GetValues(typeof(AccountType))))
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
@@ -35,12 +43,14 @@
     </div>
 </form>
 
+@* Enable client-side validation *@
 @section Scripts{
 @{
     <partial name="_ValidationScriptsPartial" />
 }
 }
 
+@* JS to change input type (as above) *@
 <script>
     function changeToText(element) {
         element.type = "text"

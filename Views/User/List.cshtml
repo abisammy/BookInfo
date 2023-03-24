@@ -4,17 +4,21 @@
     ViewData["Title"] = "Manage Users";
 }
 
+@* List users in a table *@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
             <h1 class="text-primary">Users</h1>
         </div>
+        @* Show the button to create button
+            The reason this doesnt require authentication is that this view is protected for admins only
+            at a controller level *@
         <div class="col-6 text-end">
             <a asp-controller="User" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i>&nbsp;
                 Create New User</a>
-
         </div>
     </div>
+    @* Table of users *@
     <table class="text-center align-middle table table-bordered table-striped">
         <thead>
             <tr>
@@ -30,23 +34,28 @@
             }
             @foreach (var obj in Model)
             {
+                @* Increment user number *@
                 i++;
-                    <tr>
-                        <td width="15%">@i</td>
-                        <td width="50%">@obj.Username</td>
-                        <td width="10%">@obj.AccountType.ToString()</td>
-                        <td>
-                            <div class="btn-group text" role="group">
-                                <a asp-controller="User" asp-action="Edit" asp-route-id="@obj.UserId"
+                <tr>
+                    @* User number *@
+                    <td width="15%">@i</td>
+                    @* Username *@
+                    <td width="50%">@obj.Username</td>
+                    @* Account type *@
+                    <td width="10%">@obj.AccountType.ToString()</td>
+                    @* Edit and delete buttons. No authentication as above *@
+                    <td>
+                        <div class="btn-group text" role="group">
+                            <a asp-controller="User" asp-action="Edit" asp-route-id="@obj.UserId"
                             class="btn btn-primary mx-2">
-                                    <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
-                                    
-                                <a asp-controller="User" asp-action="Delete" asp-route-id="@obj.UserId"
+                                <i class="bi bi-pencil"></i>&nbsp;&nbsp;Edit</a>
+
+                            <a asp-controller="User" asp-action="Delete" asp-route-id="@obj.UserId"
                             class="btn btn-danger mx-2">
-                                    <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
-                            </div>
-                        </td>
-                    </tr>
+                                <i class="bi bi-trash-fill"></i>&nbsp;&nbsp;Delete</a>
+                        </div>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

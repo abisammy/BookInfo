@@ -3,24 +3,26 @@
     ViewData["Title"] = $"Delete user {Model.Username}";
 }
 
+@* User deletion form *@
 <form method="post" asp-action="Delete">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary">Delete User</h2>
             <br />
         </div>
+        @* Value of the username *@
         <div class="mb-3">
-            <div asp-validation-summary="All"></div>
-
+            @* NOTE: the input is disabled as it is only meant to display the name that is about to be deleted, and is
+                not intended for the user to modidfy the value of it *@
             <label asp-for="Username"></label>
             <input asp-for="Username" disabled class="form-control" />
         </div>
+        @* Value of the account type *@
         <div class="mb-3">
-            <div asp-validation-summary="All"></div>
-
             <label asp-for="AccountType"></label>
             <input asp-for="AccountType" disabled class="form-control" value="@Model.AccountType.ToString()" />
         </div>
+        @* Submit buttons *@
         <a asp-controller="User" asp-action="List" class="btn btn-secondary" style="width:150px">Back</a>
         <button type="submit" class="btn btn-danger" style="width:150px">Delete</button>
     </div>

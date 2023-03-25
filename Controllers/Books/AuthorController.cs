@@ -24,12 +24,17 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     /* FUNCTIONS */
     private IActionResult SaveDatabase(string message, string currentPage = "", bool returnToCreate = false)
     {
+        // Save database
         _db.SaveChanges();
+        // Send optional notification
         TempData["success"] = message;
+        // Return, using lastpage controller
         return RedirectToAction("Return", "LastPage", new { currentPage = currentPage, keepPage = returnToCreate });
     }
 
 
+    // Return author, if author is not found, error will be true and the page to redirect to will be set as action,
+    // If the author is found, author will be the author
     private class ReturnAuthor
     {
         public Boolean error { get; set; }
@@ -37,9 +42,13 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
         public Author? Author { get; set; }
     }
 
+    // Get author with given id
     private ReturnAuthor GetAuthor(int? id)
     {
+        // Create new return object
         ReturnAuthor returnAuthor = new ReturnAuthor();
+
+        // Sub function to return if there is an error
         ReturnAuthor error(IActionResult view)
         {
             returnAuthor.error = true;
@@ -47,18 +56,22 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
             return returnAuthor;
         }
 
+        // If id is invaild, return not found
         if (id == null || id == 0) return (error(NotFound()));
 
+        // Attempt find author
         var authorFromDb = _db.Authors.Find(id);
+        // If author is null return author list view
         if (authorFromDb == null) return (error(RedirectToAction("List", "Author")));
 
+        // Return the author
         returnAuthor.error = false;
         returnAuthor.Author = authorFromDb;
 
         return returnAuthor;
     }
 
-    // Find an category from the categories table by an unknown ID
+    // Find an author from the authors table by an unknown ID
     private IActionResult GetAuthorView(int? id)
     {
         var author = GetAuthor(id);
@@ -135,8 +148,6 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Create(Author obj, bool returnToView = false)
     {
-        // TODO: Auhenticate
-
         if (ModelState.IsValid)
         {
             _db.Authors.Add(obj);
@@ -157,6 +168,7 @@ public class AuthorController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     //POST
+    // Save author edits, if the form is valid, checking for authentication
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Author? obj)

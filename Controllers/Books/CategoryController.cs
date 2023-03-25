@@ -24,11 +24,16 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     /* FUNCTIONS */
     private IActionResult SaveDatabase(string message, string currentPage = "", bool returnToCreate = false)
     {
+        //  Save the database
         _db.SaveChanges();
+        // Send optional notification
         TempData["success"] = message;
+        // Return using the lastpage controller
         return RedirectToAction("Return", "LastPage", new { currentPage = currentPage, keepPage = returnToCreate });
     }
 
+    // Return category, if category is not found, error will be true and the page to redirect to will be set as action
+    // If the category is found, category will be the category
     private class ReturnCategory
     {
         public Boolean error { get; set; }
@@ -36,9 +41,13 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
         public Category? Category { get; set; }
     }
 
+    // Get category with given id
     private ReturnCategory GetCategory(int? id)
     {
+        // Create new return category
         ReturnCategory returnCategory = new ReturnCategory();
+
+        // Sub function to return if there is an error
         ReturnCategory error(IActionResult view)
         {
             returnCategory.error = true;
@@ -46,11 +55,16 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
             return returnCategory;
         }
 
+        // If id is invalid return not found
         if (id == null || id == 0) return (error(NotFound()));
 
+        // Attempt to find the category
         var categoryFromDb = _db.Categories.Find(id);
+
+        // If the category is null, return
         if (categoryFromDb == null) return (error(RedirectToAction("List", "Category")));
 
+        // Return the category
         returnCategory.error = false;
         returnCategory.Category = categoryFromDb;
 
@@ -158,7 +172,6 @@ public class CategoryController : Microsoft.AspNetCore.Mvc.Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Category? obj)
     {
-        // TODO: Check if all posts have this
         if (obj == null)
         {
             return NotFound();

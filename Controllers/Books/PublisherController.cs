@@ -24,11 +24,16 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
     /* FUNCTIONS */
     private IActionResult SaveDatabase(string message, string currentPage = "", bool returnToCreate = false)
     {
+        // Save the changes to the database
         _db.SaveChanges();
+        // Send optional notification
         TempData["success"] = message;
+        // Return, using the lastpage controller
         return RedirectToAction("Return", "LastPage", new { currentPage = currentPage, keepPage = returnToCreate });
     }
 
+    // Reutnr publisher, if publisehr is not found, error will be true and the page to redirect to will be set as action,
+    // If the publisher is found, publisher will be the publisher 
     private class ReturnPublisher
     {
         public Boolean error { get; set; }
@@ -36,9 +41,13 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
         public Publisher? Publisher { get; set; }
     }
 
+    // Get publisher with given id
     private ReturnPublisher GetPublisher(int? id)
     {
+        // Create new return object
         ReturnPublisher returnPublisher = new ReturnPublisher();
+
+        // Sub function to return if there is an error
         ReturnPublisher error(IActionResult view)
         {
             returnPublisher.error = true;
@@ -46,11 +55,16 @@ public class PublisherController : Microsoft.AspNetCore.Mvc.Controller
             return returnPublisher;
         }
 
+        // If id is invalid return not found
         if (id == null || id == 0) return (error(NotFound()));
 
+        // Try find publisher
         var publisherFromDb = _db.Publishers.Find(id);
+
+        // If the publisher is not found return to the publisher list view
         if (publisherFromDb == null) return (error(RedirectToAction("List", "Publisher")));
 
+        // Return the publisher
         returnPublisher.error = false;
         returnPublisher.Publisher = publisherFromDb;
 

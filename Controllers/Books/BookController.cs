@@ -32,6 +32,8 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         ViewBag.PublisherList = new SelectList(_db.Publishers.OrderBy(t => t.Name), "PublisherId", "Name");
     }
 
+    // Return book, if the book is not found, error will be true and the page to redirect to will be set as action,
+    // If the book is found, book will be the book
     private class ReturnBook
     {
         public Boolean error { get; set; }
@@ -39,9 +41,13 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
         public Book? Book { get; set; }
     }
 
+    // Get book with given id
     private ReturnBook GetBook(int? id)
     {
+        // Create new return object
         ReturnBook returnBook = new ReturnBook();
+
+        // Sub function to return if there is an error
         ReturnBook error(IActionResult view)
         {
             returnBook.error = true;
@@ -49,12 +55,17 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
             return returnBook;
         }
 
+        // If id is invalid, return not found
         if (id == null || id == 0)
             return (error(NotFound()));
 
+        // Try find book
         var bookFromDb = _db.Books.Find(id);
+
+        // If book is null return book list view
         if (bookFromDb == null) return (error(RedirectToAction("List", "Book")));
 
+        // Return the book
         returnBook.error = false;
         returnBook.Book = bookFromDb;
         return returnBook;
@@ -72,8 +83,11 @@ public class BookController : Microsoft.AspNetCore.Mvc.Controller
     // Save the changes to the database, send a notification 
     private IActionResult SaveDatabase(string message, string currentPage = "", bool returnToView = false)
     {
+        // Save database    
         _db.SaveChanges();
+        // Send optional notification
         TempData["success"] = message;
+        // Return, using lastpage controller
         return RedirectToAction("Return", "LastPage", new { currentPage = currentPage, keepPage = returnToView });
     }
 

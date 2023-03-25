@@ -27,11 +27,16 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
     // Save the changes to the database, send a notification (optional) and return to the List view
     private IActionResult SaveDatabase(string message)
     {
+        //   Save changes
         _db.SaveChanges();
+        // Send optional notification
         TempData["success"] = message;
+        // Return to user list view
         return RedirectToAction("List", "User");
     }
 
+    // Return user, if the user is not found error will be true and the page to redirect to will be set to action,
+    // If the user is found, user will be the user
     private class ReturnUser
     {
         public Boolean error { get; set; }
@@ -39,9 +44,13 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
         public User? User { get; set; }
     }
 
+    // Get user with given id
     private ReturnUser GetUser(int? id)
     {
+        // Create new returnUser
         ReturnUser returnUser = new ReturnUser();
+
+        // Sub function to return if there is an error
         ReturnUser error(IActionResult view)
         {
             returnUser.error = true;
@@ -49,11 +58,16 @@ public class UserController : Microsoft.AspNetCore.Mvc.Controller
             return returnUser;
         }
 
+        // If the id is invalid return
         if (id == null || id == 0) return (error(NotFound()));
 
+        // Try find the user
         var userFromDb = _db.Users.Find(id);
+
+        // If the user is invalid, return
         if (userFromDb == null) return (error(RedirectToAction("List", "User")));
 
+        // Return the user
         returnUser.error = false;
         returnUser.User = userFromDb;
 
